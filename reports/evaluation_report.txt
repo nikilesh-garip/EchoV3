@@ -1,0 +1,41 @@
+Echo YAMNet Transfer-Learning Head Evaluation Report (real)
+=================================
+
+Accuracy: 0.8730
+Precision: 0.8819
+Recall: 0.8657
+F1 Score: 0.8702
+
+Class-wise Metrics:
+Normal: Precision=0.8226, Recall=0.8644, FPR=0.0846, FNR=0.1356
+Gunshot: Precision=0.8333, Recall=0.9375, FPR=0.0173, FNR=0.0625
+Explosion: Precision=1.0000, Recall=0.8500, FPR=0.0000, FNR=0.1500
+Scream: Precision=0.8889, Recall=1.0000, FPR=0.0182, FNR=0.0000
+Glass Breaking: Precision=0.6154, Recall=0.6154, FPR=0.0284, FNR=0.3846
+Fire Alarm: Precision=0.8947, Recall=0.9444, FPR=0.0117, FNR=0.0556
+Siren: Precision=1.0000, Recall=0.9412, FPR=0.0000, FNR=0.0588
+Shouting: Precision=1.0000, Recall=0.7727, FPR=0.0000, FNR=0.2273
+
+Confusion Matrix:
+[[51  2  0  1  3  2  0  0]
+ [ 1 15  0  0  0  0  0  0]
+ [ 1  0 17  0  2  0  0  0]
+ [ 0  0  0 24  0  0  0  0]
+ [ 4  0  0  1  8  0  0  0]
+ [ 1  0  0  0  0 17  0  0]
+ [ 1  0  0  0  0  0 16  0]
+ [ 3  1  0  1  0  0  0 17]]
+
+Real-world release gates:
+Ready: False
+BLOCKER: Macro F1 must be at least 0.95.
+BLOCKER: fire_alarm precision must be at least 0.95.
+BLOCKER: glass_breaking precision must be at least 0.95.
+BLOCKER: gunshot precision must be at least 0.95.
+BLOCKER: normal precision must be at least 0.95.
+BLOCKER: scream precision must be at least 0.95.
+BLOCKER: gunshot recall must be at least 0.98.
+BLOCKER: explosion recall must be at least 0.98.
+BLOCKER: fire_alarm recall must be at least 0.98.
+BLOCKER: Normal-audio false-positive rate must be at most 1.00%.
+BLOCKER: Playback false-positive rate must be at most 3.00%.
