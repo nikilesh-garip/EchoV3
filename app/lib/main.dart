@@ -165,39 +165,41 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
         ),
       ),
       bottomNavigationBar: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: AppColors.surface,
-          border: const Border(top: BorderSide(color: AppColors.line)),
-          boxShadow: softShadow(opacity: 0.05, blur: 18, y: -4),
+          border: Border(top: BorderSide(color: AppColors.line, width: 1.2)),
         ),
         child: SafeArea(
           top: false,
           child: NavigationBarTheme(
             data: NavigationBarThemeData(
               backgroundColor: Colors.transparent,
-              indicatorColor: AppColors.primarySoft,
+              indicatorColor: AppColors.primary,
+              indicatorShape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppRadii.control),
+                side: const BorderSide(color: AppColors.line, width: 1.0),
+              ),
               labelTextStyle: WidgetStateProperty.resolveWith(
                 (states) => TextStyle(
-                  fontSize: 11,
-                  fontWeight: states.contains(WidgetState.selected)
-                      ? FontWeight.w700
-                      : FontWeight.w500,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 0.8,
                   color: states.contains(WidgetState.selected)
-                      ? AppColors.primary
+                      ? AppColors.ink
                       : AppColors.inkMuted,
                 ),
               ),
               iconTheme: WidgetStateProperty.resolveWith(
                 (states) => IconThemeData(
-                  size: 22,
+                  size: 20,
                   color: states.contains(WidgetState.selected)
-                      ? AppColors.primary
+                      ? AppColors.ink
                       : AppColors.inkMuted,
                 ),
               ),
             ),
             child: NavigationBar(
-              height: 66,
+              height: 62,
               elevation: 0,
               selectedIndex: _currentIndex,
               onDestinationSelected: (index) => setState(() => _currentIndex = index),
@@ -205,7 +207,7 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
                 const NavigationDestination(
                   icon: Icon(Icons.dashboard_outlined),
                   selectedIcon: Icon(Icons.dashboard),
-                  label: 'Dashboard',
+                  label: 'DASHBOARD',
                 ),
                 NavigationDestination(
                   icon: Stack(
@@ -214,36 +216,36 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
                       const Icon(Icons.graphic_eq_outlined),
                       if (_isMonitoring)
                         Positioned(
-                          right: -2,
-                          top: -2,
+                          right: -3,
+                          top: -3,
                           child: Container(
-                            width: 8,
-                            height: 8,
-                            decoration: const BoxDecoration(
-                              color: AppColors.success,
-                              shape: BoxShape.circle,
+                            width: 7,
+                            height: 7,
+                            decoration: BoxDecoration(
+                              color: AppColors.primary,
+                              border: Border.all(color: AppColors.line, width: 1),
                             ),
                           ),
                         ),
                     ],
                   ),
                   selectedIcon: const Icon(Icons.graphic_eq),
-                  label: 'Monitor',
+                  label: 'MONITOR',
                 ),
                 const NavigationDestination(
                   icon: Icon(Icons.history_outlined),
                   selectedIcon: Icon(Icons.history),
-                  label: 'History',
+                  label: 'HISTORY',
                 ),
                 const NavigationDestination(
                   icon: Icon(Icons.contacts_outlined),
                   selectedIcon: Icon(Icons.contacts),
-                  label: 'Contacts',
+                  label: 'CONTACTS',
                 ),
                 const NavigationDestination(
                   icon: Icon(Icons.play_circle_outline),
                   selectedIcon: Icon(Icons.play_circle),
-                  label: 'Demo',
+                  label: 'DEMO',
                 ),
               ],
             ),

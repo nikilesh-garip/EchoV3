@@ -75,19 +75,86 @@ function nameFromIdentifier(identifier) {
         .join(' ') || 'Echo user';
 }
 
+function showLandingPage() {
+    const landing = document.getElementById('landing-page');
+    const overlay = document.getElementById('login-overlay');
+    const shell = document.getElementById('app-shell');
+    if (landing) {
+        landing.style.display = 'block';
+        landing.removeAttribute('hidden');
+    }
+    if (overlay) {
+        overlay.style.display = 'none';
+        overlay.setAttribute('hidden', '');
+    }
+    if (shell) {
+        shell.style.display = 'none';
+        shell.setAttribute('hidden', '');
+    }
+    const navBtn = document.getElementById('nav-login-btn');
+    try {
+        const raw = localStorage.getItem(SESSION_KEY);
+        if (raw) {
+            const s = JSON.parse(raw);
+            if (s && s.userId) {
+                if (navBtn) {
+                    navBtn.innerHTML = `<span>OPEN CONSOLE (${s.displayName || 'USER'})</span><span class="btn-arrow">→</span>`;
+                    navBtn.onclick = (e) => {
+                        e.preventDefault();
+                        applySession(s);
+                    };
+                }
+                return;
+            }
+        }
+    } catch (_) {}
+    if (navBtn) {
+        navBtn.innerHTML = `<span>LOGIN / SIGN UP</span><span class="btn-arrow">→</span>`;
+        navBtn.onclick = (e) => {
+            e.preventDefault();
+            openLoginModal();
+        };
+    }
+}
+
+function openLoginModal() {
+    const overlay = document.getElementById('login-overlay');
+    if (overlay) {
+        overlay.style.display = 'grid';
+        overlay.removeAttribute('hidden');
+        setTimeout(() => {
+            document.getElementById('login-identifier')?.focus();
+        }, 50);
+    }
+}
+
+function closeLoginModal() {
+    const overlay = document.getElementById('login-overlay');
+    if (overlay) {
+        overlay.style.display = 'none';
+        overlay.setAttribute('hidden', '');
+    }
+}
+
 function applySession(session) {
     userId = session.userId;
     displayName = session.displayName;
     document.getElementById('session-name').textContent = `Signed in as ${displayName}`;
+    const landing = document.getElementById('landing-page');
     const overlay = document.getElementById('login-overlay');
     const shell = document.getElementById('app-shell');
-    // Belt-and-suspenders: set inline style directly rather than relying only
-    // on the `hidden` attribute + CSS specificity, so a stale cached
-    // stylesheet can never leave both screens visible at once.
-    overlay.style.display = 'none';
-    overlay.setAttribute('hidden', '');
-    shell.style.display = '';
-    shell.removeAttribute('hidden');
+    if (landing) {
+        landing.style.display = 'none';
+        landing.setAttribute('hidden', '');
+    }
+    if (overlay) {
+        overlay.style.display = 'none';
+        overlay.setAttribute('hidden', '');
+    }
+    if (shell) {
+        shell.style.display = '';
+        shell.removeAttribute('hidden');
+    }
     loadEscalationStatus();
     loadReadiness();
     detectAccurateLocation();
@@ -97,12 +164,19 @@ function applySession(session) {
 function restoreSession() {
     try {
         const raw = localStorage.getItem(SESSION_KEY);
-        if (!raw) return false;
+        if (!raw) {
+            showLandingPage();
+            return false;
+        }
         const session = JSON.parse(raw);
-        if (!session || !session.userId) return false;
+        if (!session || !session.userId) {
+            showLandingPage();
+            return false;
+        }
         applySession(session);
         return true;
     } catch (e) {
+        showLandingPage();
         return false;
     }
 }
@@ -123,7 +197,48 @@ document.getElementById('login-form').addEventListener('submit', (e) => {
 
 document.getElementById('sign-out-btn').addEventListener('click', () => {
     localStorage.removeItem(SESSION_KEY);
-    location.reload();
+    showLandingPage();
+    showToast('Signed out of local profile', 'info');
+});
+
+document.querySelectorAll('.open-login-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        const raw = localStorage.getItem(SESSION_KEY);
+        if (raw && btn.id === 'nav-login-btn') {
+            try {
+                const s = JSON.parse(raw);
+                if (s && s.userId) {
+                    applySession(s);
+                    return;
+                }
+            } catch (_) {}
+        }
+        e.preventDefault();
+        openLoginModal();
+    });
+});
+
+document.getElementById('login-close-btn')?.addEventListener('click', () => {
+    closeLoginModal();
+});
+
+document.getElementById('login-overlay')?.addEventListener('click', (e) => {
+    if (e.target === document.getElementById('login-overlay')) {
+        closeLoginModal();
+    }
+});
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        const overlay = document.getElementById('login-overlay');
+        if (overlay && overlay.style.display !== 'none' && !overlay.hasAttribute('hidden')) {
+            closeLoginModal();
+        }
+    }
+});
+
+document.getElementById('sidebar-homepage-btn')?.addEventListener('click', () => {
+    showLandingPage();
 });
 
 restoreSession();

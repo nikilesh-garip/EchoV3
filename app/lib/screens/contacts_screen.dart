@@ -111,8 +111,9 @@ class _ContactsScreenState extends State<ContactsScreen> {
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      shape: RoundedRectangleBorder(
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadii.control)),
+        side: const BorderSide(color: AppColors.line, width: 1.5),
       ),
       builder: (context) => Padding(
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
@@ -120,12 +121,19 @@ class _ContactsScreenState extends State<ContactsScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Rehearsal result', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+            const Text(
+              'REHEARSAL TELEMETRY DISPATCH',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 0.5,
+                color: AppColors.ink,
+              ),
+            ),
             const SizedBox(height: 4),
             const Text(
-              'Exactly what each channel did. "Simulated" means the channel is not '
-              'configured yet in the backend .env.',
-              style: TextStyle(fontSize: 12, color: AppColors.inkMuted, height: 1.5),
+              'Channel-level verification log. Simulated entries reflect pending SIP/Bot backend bindings.',
+              style: TextStyle(fontSize: 11, color: AppColors.inkMuted, height: 1.5),
             ),
             const SizedBox(height: 16),
             ...attempts.map(
@@ -134,16 +142,22 @@ class _ContactsScreenState extends State<ContactsScreen> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(
-                      attempt['channel'] == 'telegram'
-                          ? Icons.send_outlined
-                          : Icons.phone_in_talk_outlined,
-                      size: 18,
-                      color: attempt['status'] == 'sent'
-                          ? AppColors.success
-                          : attempt['status'] == 'simulated'
-                              ? AppColors.info
-                              : AppColors.danger,
+                    Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        color: attempt['status'] == 'sent'
+                            ? AppColors.primary
+                            : AppColors.surfaceAlt,
+                        border: Border.all(color: AppColors.line, width: 1),
+                      ),
+                      child: Icon(
+                        attempt['channel'] == 'telegram'
+                            ? Icons.send_outlined
+                            : Icons.phone_in_talk_outlined,
+                        size: 15,
+                        color: AppColors.ink,
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -151,8 +165,8 @@ class _ContactsScreenState extends State<ContactsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '${attempt['contact_name'] ?? 'Contact'} · ${attempt['status']}',
-                            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+                            '${(attempt['contact_name'] ?? 'Contact').toString().toUpperCase()} // ${attempt['status'].toString().toUpperCase()}',
+                            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, letterSpacing: 0.3),
                           ),
                           const SizedBox(height: 2),
                           Text(
@@ -189,7 +203,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
       children: [
         RefreshIndicator(
           onRefresh: _load,
-          color: AppColors.primary,
+          color: AppColors.ink,
           child: ListView(
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 100),
             children: [
@@ -197,58 +211,85 @@ class _ContactsScreenState extends State<ContactsScreen> {
                 index: 0,
                 child: Row(
                   children: [
-                    const Expanded(
-                      child: Text(
-                        'Emergency contacts',
-                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Text(
+                            '03 // RECIPIENTS & ROUTING',
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: 1.5,
+                              color: AppColors.inkMuted,
+                            ),
+                          ),
+                          SizedBox(height: 2),
+                          Text(
+                            'EMERGENCY DISPATCH',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: 0.5,
+                              color: AppColors.ink,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     StatusPill(
-                      label: ready ? 'READY' : 'INCOMPLETE',
-                      color: ready ? AppColors.success : AppColors.warning,
-                      background: ready ? AppColors.successSoft : AppColors.warningSoft,
+                      label: ready ? 'CHAIN READY' : 'CONFIG REQUIRED',
+                      color: AppColors.ink,
+                      background: ready ? AppColors.primary : AppColors.surfaceAlt,
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 8),
               const FadeSlideIn(
                 index: 0,
                 child: Text(
-                  'These people are called and messaged when Echo verifies a high-risk sound. '
-                  'They are contacted in the order shown.',
-                  style: TextStyle(fontSize: 13, color: AppColors.inkMuted, height: 1.5),
+                  'Verified contacts queued for automated speech relay and Telegram telemetry dispatch upon alarm trip.',
+                  style: TextStyle(fontSize: 12, color: AppColors.inkMuted, height: 1.5),
                 ),
               ),
               const SizedBox(height: 16),
               FadeSlideIn(
                 index: 1,
                 child: AppCard(
+                  hasShadow: true,
+                  shadowOffset: 3,
                   padding: const EdgeInsets.all(16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       const Text(
-                        'Test the whole chain',
-                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800),
+                        'ESCALATION CHAIN REHEARSAL',
+                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.w900, letterSpacing: 0.5),
                       ),
                       const SizedBox(height: 4),
                       const Text(
-                        'Sends a clearly-labelled rehearsal call and Telegram message to every '
-                        'contact, and reports exactly what each channel did.',
-                        style: TextStyle(fontSize: 12, color: AppColors.inkMuted, height: 1.5),
+                        'Executes end-to-end dry-run of Twilio voice dispatch and Telegram payload delivery across all configured recipients.',
+                        style: TextStyle(fontSize: 11, color: AppColors.inkMuted, height: 1.5),
                       ),
                       const SizedBox(height: 14),
                       OutlinedButton.icon(
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(color: AppColors.line, width: 1.5),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                        ),
                         onPressed: _busy || _contacts.isEmpty ? null : _runTest,
                         icon: _busy
                             ? const SizedBox(
                                 width: 16,
                                 height: 16,
-                                child: CircularProgressIndicator(strokeWidth: 2),
+                                child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.ink),
                               )
-                            : const Icon(Icons.wifi_tethering, size: 18),
-                        label: Text(_busy ? 'SENDING…' : 'RUN ESCALATION REHEARSAL'),
+                            : const Icon(Icons.wifi_tethering, size: 18, color: AppColors.ink),
+                        label: Text(
+                          _busy ? 'EXECUTING REHEARSAL…' : 'DISPATCH TEST SIGNAL',
+                          style: const TextStyle(fontWeight: FontWeight.w900, letterSpacing: 0.5, color: AppColors.ink),
+                        ),
                       ),
                     ],
                   ),
@@ -256,25 +297,26 @@ class _ContactsScreenState extends State<ContactsScreen> {
               ),
               if (_notice != null) ...[
                 const SizedBox(height: 12),
-                _banner(_notice!, AppColors.successSoft, AppColors.success, Icons.check_circle_outline),
+                _banner(_notice!, AppColors.primary, AppColors.ink, Icons.check_circle_outline),
               ],
               if (_error != null) ...[
                 const SizedBox(height: 12),
-                _banner(_error!, AppColors.dangerSoft, AppColors.danger, Icons.error_outline),
+                _banner(_error!, AppColors.surfaceAlt, AppColors.vermilion, Icons.error_outline),
               ],
               const SizedBox(height: 24),
-              const SectionLabel('Contact list'),
+              const SectionLabel('04 // RECIPIENT ROSTER'),
               if (_loading)
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 32),
-                  child: Center(child: CircularProgressIndicator(color: AppColors.primary)),
+                  child: Center(child: CircularProgressIndicator(color: AppColors.ink)),
                 )
               else if (_contacts.isEmpty)
-                const AppCard(
-                  child: Text(
-                    'No contacts yet. Add the person who should be called if Echo hears '
-                    'something dangerous.',
-                    style: TextStyle(fontSize: 13, color: AppColors.inkMuted, height: 1.5),
+                AppCard(
+                  hasShadow: true,
+                  shadowOffset: 2,
+                  child: const Text(
+                    'ZERO CONTACTS IN PROTOCOL. REGISTER RECIPIENTS BELOW TO ENABLE DISPATCH.',
+                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5, color: AppColors.inkMuted, height: 1.5),
                   ),
                 )
               else
@@ -293,12 +335,26 @@ class _ContactsScreenState extends State<ContactsScreen> {
         Positioned(
           right: 20,
           bottom: 20,
-          child: FloatingActionButton.extended(
-            backgroundColor: AppColors.primary,
-            foregroundColor: Colors.white,
-            onPressed: () => _openEditor(),
-            icon: const Icon(Icons.person_add_alt),
-            label: const Text('ADD CONTACT'),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(AppRadii.control),
+              boxShadow: neoShadow(offset: 3),
+            ),
+            child: ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: AppColors.ink,
+                side: const BorderSide(color: AppColors.line, width: 1.5),
+                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadii.control)),
+              ),
+              onPressed: () => _openEditor(),
+              icon: const Icon(Icons.person_add_alt, size: 18, color: AppColors.ink),
+              label: const Text(
+                'NEW RECIPIENT',
+                style: TextStyle(fontWeight: FontWeight.w900, letterSpacing: 0.8),
+              ),
+            ),
           ),
         ),
       ],
@@ -308,7 +364,9 @@ class _ContactsScreenState extends State<ContactsScreen> {
   Widget _banner(String text, Color background, Color color, IconData icon) {
     return AppCard(
       background: background,
-      borderColor: color.withOpacity(0.3),
+      borderColor: AppColors.line,
+      hasShadow: true,
+      shadowOffset: 2,
       padding: const EdgeInsets.all(14),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -316,7 +374,10 @@ class _ContactsScreenState extends State<ContactsScreen> {
           Icon(icon, size: 18, color: color),
           const SizedBox(width: 10),
           Expanded(
-            child: Text(text, style: TextStyle(fontSize: 12, color: color, height: 1.5)),
+            child: Text(
+              text.toUpperCase(),
+              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, letterSpacing: 0.3, color: color, height: 1.4),
+            ),
           ),
         ],
       ),
@@ -329,6 +390,8 @@ class _ContactsScreenState extends State<ContactsScreen> {
     final notifyTelegram = contact['notify_telegram'] == true || contact['notify_telegram'] == 1;
 
     return AppCard(
+      hasShadow: true,
+      shadowOffset: 3,
       onTap: () => _openEditor(existing: contact),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -336,16 +399,16 @@ class _ContactsScreenState extends State<ContactsScreen> {
           Row(
             children: [
               Container(
-                width: 40,
-                height: 40,
+                width: 36,
+                height: 36,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: AppColors.primarySoft,
-                  borderRadius: BorderRadius.circular(12),
+                  color: AppColors.primary,
+                  border: Border.all(color: AppColors.line, width: 1.2),
                 ),
                 child: Text(
-                  '${index + 1}',
-                  style: const TextStyle(fontWeight: FontWeight.w800, color: AppColors.primary),
+                  '0${index + 1}',
+                  style: const TextStyle(fontWeight: FontWeight.w900, color: AppColors.ink, fontSize: 13),
                 ),
               ),
               const SizedBox(width: 12),
@@ -354,46 +417,48 @@ class _ContactsScreenState extends State<ContactsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      contact['name']?.toString() ?? 'Contact',
-                      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800),
+                      (contact['name']?.toString() ?? 'Contact').toUpperCase(),
+                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w900, letterSpacing: 0.3),
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      '${contact['relation']?.toString().isNotEmpty == true ? '${contact['relation']} · ' : ''}'
+                      '${contact['relation']?.toString().isNotEmpty == true ? '${contact['relation']?.toString().toUpperCase()} // ' : ''}'
                       '${contact['phone'] ?? ''}',
-                      style: const TextStyle(fontSize: 12, color: AppColors.inkMuted),
+                      style: const TextStyle(fontSize: 11, color: AppColors.inkMuted, fontWeight: FontWeight.w600),
                     ),
                   ],
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.delete_outline, color: AppColors.danger, size: 20),
+                icon: const Icon(Icons.delete_outline, color: AppColors.ink, size: 20),
                 onPressed: () => _delete(contact['id'] as int),
               ),
             ],
           ),
           const SizedBox(height: 10),
-          const Divider(height: 1),
+          const Divider(height: 1, color: AppColors.lineSubtle),
           const SizedBox(height: 6),
           SwitchListTile(
+            activeThumbColor: AppColors.primary,
             dense: true,
             contentPadding: EdgeInsets.zero,
-            title: const Text('Automated voice call', style: TextStyle(fontSize: 13)),
+            title: const Text('VOICE CALL DISPATCH', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, letterSpacing: 0.3)),
             value: notifyCall,
             onChanged: (value) => _toggleChannel(contact, 'notify_call', value),
           ),
           SwitchListTile(
+            activeThumbColor: AppColors.primary,
             dense: true,
             contentPadding: EdgeInsets.zero,
-            title: const Text('Telegram clip + location', style: TextStyle(fontSize: 13)),
+            title: const Text('TELEGRAM CLIP + COORDINATES', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, letterSpacing: 0.3)),
             subtitle: hasTelegram
                 ? Text(
-                    'Chat ${contact['telegram_chat_id']}',
-                    style: const TextStyle(fontSize: 11, color: AppColors.inkMuted),
+                    'TELEGRAM CHAT // ${contact['telegram_chat_id']}',
+                    style: const TextStyle(fontSize: 11, color: AppColors.inkMuted, fontWeight: FontWeight.w600),
                   )
                 : const Text(
-                    'No chat linked — tap the card to link one',
-                    style: TextStyle(fontSize: 11, color: AppColors.warning),
+                    'CHAT UNLINKED · TAP CARD TO CONFIGURE',
+                    style: TextStyle(fontSize: 10, color: AppColors.vermilion, fontWeight: FontWeight.w800),
                   ),
             value: notifyTelegram,
             onChanged: (value) => _toggleChannel(contact, 'notify_telegram', value),
@@ -498,9 +563,12 @@ class _ContactEditorState extends State<_ContactEditor> {
     return Padding(
       padding: EdgeInsets.only(bottom: bottomInset),
       child: Container(
-        decoration: const BoxDecoration(
-          color: AppColors.canvas,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(26)),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          border: const Border(
+            top: BorderSide(color: AppColors.line, width: 2),
+          ),
+          boxShadow: neoShadow(offset: 4),
         ),
         padding: const EdgeInsets.fromLTRB(20, 18, 20, 26),
         child: SingleChildScrollView(
@@ -512,23 +580,25 @@ class _ContactEditorState extends State<_ContactEditor> {
               children: [
                 Center(
                   child: Container(
-                    width: 42,
+                    width: 36,
                     height: 4,
-                    decoration: BoxDecoration(
-                      color: AppColors.line,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
+                    color: AppColors.line,
                   ),
                 ),
                 const SizedBox(height: 18),
                 Text(
-                  widget.existing == null ? 'Add emergency contact' : 'Edit contact',
-                  style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w800),
+                  widget.existing == null ? 'NEW RECIPIENT // PROTOCOL' : 'EDIT RECIPIENT // PROTOCOL',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 0.5,
+                    color: AppColors.ink,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _name,
-                  decoration: const InputDecoration(labelText: 'Full name'),
+                  decoration: const InputDecoration(labelText: 'FULL NAME'),
                   validator: (v) => (v == null || v.trim().isEmpty) ? 'Name is required' : null,
                 ),
                 const SizedBox(height: 12),
@@ -536,18 +606,18 @@ class _ContactEditorState extends State<_ContactEditor> {
                   controller: _phone,
                   keyboardType: TextInputType.phone,
                   decoration: const InputDecoration(
-                    labelText: 'Phone number',
-                    helperText: 'Include the country code, e.g. +9198…, for the automated call',
+                    labelText: 'PHONE NUMBER',
+                    helperText: 'E.164 notation (+91...) required for automated SIP relay',
                   ),
                   validator: (v) => (v == null || v.trim().isEmpty) ? 'Phone is required' : null,
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: _relation,
-                  decoration: const InputDecoration(labelText: 'Relation (parent, friend…)'),
+                  decoration: const InputDecoration(labelText: 'RELATIONSHIP TAG (PARENT, SECURITY, PEER)'),
                 ),
                 const SizedBox(height: 16),
-                const SectionLabel('Escalation order'),
+                const SectionLabel('05 // DISPATCH PRIORITY INDEX'),
                 Row(
                   children: List.generate(4, (index) {
                     final value = index + 1;
@@ -555,64 +625,101 @@ class _ContactEditorState extends State<_ContactEditor> {
                     return Padding(
                       padding: const EdgeInsets.only(right: 8),
                       child: ChoiceChip(
-                        label: Text('$value'),
+                        label: Text('0$value'),
                         selected: selected,
-                        selectedColor: AppColors.primarySoft,
+                        selectedColor: AppColors.primary,
+                        backgroundColor: AppColors.surfaceAlt,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(AppRadii.control),
+                          side: BorderSide(
+                            color: selected ? AppColors.line : AppColors.lineSubtle,
+                            width: selected ? 1.5 : 1,
+                          ),
+                        ),
+                        labelStyle: TextStyle(
+                          fontWeight: FontWeight.w900,
+                          fontSize: 12,
+                          color: selected ? AppColors.ink : AppColors.inkMuted,
+                        ),
                         onSelected: (_) => setState(() => _priority = value),
                       ),
                     );
                   }),
                 ),
                 const SizedBox(height: 18),
-                const SectionLabel('Telegram delivery'),
+                const SectionLabel('06 // TELEGRAM GPS DISPATCH BINDING'),
                 TextFormField(
                   controller: _chatId,
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
-                    labelText: 'Telegram chat id',
-                    helperText: 'The clip, class, risk score, and location go here',
+                    labelText: 'TELEGRAM CHAT ID',
+                    helperText: '5s evidence clip, GPS coordinate pin, and threat class stream here',
                   ),
                 ),
                 const SizedBox(height: 10),
                 OutlinedButton.icon(
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(color: AppColors.line, width: 1.5),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                  ),
                   onPressed: _loadingChats ? null : _loadChats,
                   icon: _loadingChats
-                      ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
-                      : const Icon(Icons.search, size: 18),
-                  label: const Text('FIND CHATS THAT STARTED THE BOT'),
+                      ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.ink))
+                      : const Icon(Icons.search, size: 18, color: AppColors.ink),
+                  label: const Text(
+                    'POLL INCOMING BOT CHAT IDENTIFIERS',
+                    style: TextStyle(fontWeight: FontWeight.w900, letterSpacing: 0.5, color: AppColors.ink),
+                  ),
                 ),
                 if (!_telegramConfigured)
                   const Padding(
                     padding: EdgeInsets.only(top: 10),
                     child: Text(
-                      'The backend has no TELEGRAM_BOT_TOKEN yet, so no chats can be listed. '
-                      'Alerts will be simulated until it is set.',
-                      style: TextStyle(fontSize: 11, color: AppColors.warning, height: 1.5),
+                      'STATUS: TELEGRAM_BOT_TOKEN unconfigured in backend environment. Broadcasts simulated.',
+                      style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.vermilion, height: 1.5),
                     ),
                   ),
                 ..._chats.map(
-                  (chat) => ListTile(
-                    dense: true,
-                    contentPadding: EdgeInsets.zero,
-                    leading: const Icon(Icons.chat_bubble_outline, size: 18),
-                    title: Text(chat['name']?.toString() ?? '', style: const TextStyle(fontSize: 13)),
-                    subtitle: Text(
-                      'chat ${chat['chat_id']}',
-                      style: const TextStyle(fontSize: 11, color: AppColors.inkMuted),
+                  (chat) => Container(
+                    margin: const EdgeInsets.only(top: 6),
+                    decoration: BoxDecoration(
+                      color: AppColors.surfaceAlt,
+                      border: Border.all(color: AppColors.lineSubtle, width: 1),
                     ),
-                    trailing: const Icon(Icons.add_circle_outline, size: 18, color: AppColors.primary),
-                    onTap: () => setState(() => _chatId.text = chat['chat_id']?.toString() ?? ''),
+                    child: ListTile(
+                      dense: true,
+                      leading: const Icon(Icons.chat_bubble_outline, size: 18, color: AppColors.ink),
+                      title: Text(
+                        (chat['name']?.toString() ?? '').toUpperCase(),
+                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800),
+                      ),
+                      subtitle: Text(
+                        'ID // ${chat['chat_id']}',
+                        style: const TextStyle(fontSize: 11, color: AppColors.inkMuted),
+                      ),
+                      trailing: const Icon(Icons.add_circle_outline, size: 18, color: AppColors.ink),
+                      onTap: () => setState(() => _chatId.text = chat['chat_id']?.toString() ?? ''),
+                    ),
                   ),
                 ),
                 if (_error != null) ...[
                   const SizedBox(height: 12),
-                  Text(_error!, style: const TextStyle(fontSize: 12, color: AppColors.danger)),
+                  Text(_error!, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: AppColors.vermilion)),
                 ],
                 const SizedBox(height: 20),
                 PressableScale(
                   child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: AppColors.ink,
+                      side: const BorderSide(color: AppColors.line, width: 1.5),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
                     onPressed: _saving ? null : _save,
-                    child: Text(_saving ? 'SAVING…' : 'SAVE CONTACT'),
+                    child: Text(
+                      _saving ? 'COMMITTING TO DISPATCH...' : 'REGISTER CONTACT ENTRY',
+                      style: const TextStyle(fontWeight: FontWeight.w900, letterSpacing: 0.8),
+                    ),
                   ),
                 ),
               ],

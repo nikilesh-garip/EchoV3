@@ -6,13 +6,496 @@
 <title>Echo — Safety monitoring dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=8">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=9">
 </head>
 <body>
 
-<div class="login-overlay" id="login-overlay" role="dialog" aria-modal="true" aria-labelledby="login-title">
+<!-- Public Landing Page / Homepage (Shown Before Login) -->
+<div class="landing-page" id="landing-page">
+  <!-- Top Navigation Bar -->
+  <header class="landing-nav-wrap">
+    <div class="landing-nav">
+      <a class="landing-brand" href="#landing-hero">
+        <span class="brand-mark"><i></i></span>
+        <div class="landing-brand-text">
+          <span class="brand-title">ECHO</span>
+          <span class="brand-sub">ACOUSTIC SAFETY TELEMETRY</span>
+        </div>
+      </a>
+      <nav class="landing-links" aria-label="Landing Navigation">
+        <a href="#why-echo" class="landing-link">Why Echo</a>
+        <a href="#how-it-works" class="landing-link">How It Works</a>
+        <a href="#architecture" class="landing-link">Architecture</a>
+        <a href="#hazard-matrix" class="landing-link">Hazard Matrix</a>
+        <a href="#tactical" class="landing-link">Tactical Radar</a>
+        <a href="#privacy" class="landing-link">Privacy</a>
+        <a href="#faq" class="landing-link">FAQ</a>
+      </nav>
+      <div class="landing-nav-actions">
+        <button type="button" class="landing-login-btn open-login-btn" id="nav-login-btn">
+          <span>LOGIN / SIGN UP</span>
+          <span class="btn-arrow">→</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="landing-hero" id="landing-hero">
+    <div class="landing-container">
+      <div class="landing-hero-grid">
+        <div class="landing-hero-copy">
+          <div class="hero-status-pill">
+            <span class="pulse-dot"></span>
+            <span>00 // SENSOR NETWORK READY · AUTONOMOUS DEFENSE</span>
+          </div>
+          <h1 class="hero-title">
+            ZERO-TOUCH HAZARD SENSING THAT CALLS HELP <span class="highlight-yellow">WHEN YOU CANNOT.</span>
+          </h1>
+          <p class="hero-lead">
+            When violence, forced home entry, or gunfire erupts, you cannot reach your phone to unlock a screen, dial 911, or whisper to an operator. ECHO listens silently in ephemeral local windows, validates authentic life perils with dual-pass machine learning, and autonomously dispatches Telegram GPS coordinates and automated voice calls.
+          </p>
+          <div class="hero-actions">
+            <button type="button" class="btn-hero-primary open-login-btn">
+              <span>ENTER ECHO CONSOLE // SIGN IN</span>
+              <span class="arrow">↗</span>
+            </button>
+            <a href="#how-it-works" class="btn-hero-secondary">
+              <span>EXPLORE HOW IT WORKS ↓</span>
+            </a>
+          </div>
+          <div class="hero-metrics-ribbon">
+            <div class="metric-item">
+              <strong>8 CLASSES</strong>
+              <span>Gunshot, Scream, Glass, Blast...</span>
+            </div>
+            <div class="metric-item">
+              <strong>&lt; 1.2s</strong>
+              <span>Two-Pass Decision Latency</span>
+            </div>
+            <div class="metric-item">
+              <strong>100% EPHEMERAL</strong>
+              <span>Audio Never Retained in Cloud</span>
+            </div>
+            <div class="metric-item">
+              <strong>TELEGRAM + CALL</strong>
+              <span>Simultaneous Multi-Channel</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="landing-hero-card">
+          <div class="hero-diagram-frame">
+            <div class="diagram-header">
+              <span class="tag">00 // SYSTEM_ARCHITECTURE</span>
+              <span class="badge-live">LIVE TELEMETRY</span>
+            </div>
+            <img src="/assets/echo_architecture.jpg" alt="ECHO Acoustic Hazard Detection Architecture" class="landing-hero-img">
+            <div class="diagram-footer">
+              <div class="telemetry-chip">
+                <span class="dot yellow"></span>
+                <span>YAMNet Deep Hazard Classifier · 16kHz Ephemeral Buffer</span>
+              </div>
+              <span class="spec-id">SPEC-2026.09</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 1: Why ECHO / The Crisis Paradox -->
+  <section class="landing-section" id="why-echo">
+    <div class="landing-container">
+      <div class="section-label-bar">
+        <span class="sec-index">01 //</span>
+        <span class="sec-title">THE CRISIS PARADOX</span>
+      </div>
+      <h2 class="section-heading">WHY TRADITIONAL 911 &amp; PANIC APPS FAIL IN REAL DANGER</h2>
+      <p class="section-subtext">Conventional personal safety apps assume you are calm, have both hands free, and can freely speak aloud. Real physical assaults shatter these assumptions instantly.</p>
+      
+      <div class="comparison-grid">
+        <div class="comparison-card fail">
+          <div class="card-status-strip red">CONVENTIONAL SAFETY APPS // VULNERABLE</div>
+          <h3>Manual Interaction Required</h3>
+          <p>You must locate your phone in darkness, successfully authenticate biometric FaceID or fingerprints (frequently disabled by physical struggle or trembling), navigate to an app, and press a button.</p>
+          <div class="card-foot-tag red-tag">Result: 20–45s delayed or completely impossible</div>
+        </div>
+
+        <div class="comparison-card success">
+          <div class="card-status-strip yellow">ECHO AUTONOMOUS SYSTEM // PASSIVE SHIELD</div>
+          <h3>Continuous Hands-Free Detection</h3>
+          <p>ECHO operates passively in the room background on your phone, laptop, or tablet. If high-calibre gunshots, human screams, or shattering glass occur, detection and verification trigger autonomously with zero user touch.</p>
+          <div class="card-foot-tag yellow-tag">Result: Sub-second activation with zero movement</div>
+        </div>
+
+        <div class="comparison-card fail">
+          <div class="card-status-strip red">AUDIO 911 DIALERS // LETHAL RISK</div>
+          <h3>Verbal Communication Compromises You</h3>
+          <p>Speaking to emergency dispatchers reveals your exact hiding closet or room location to an armed intruder or stalker, directly escalating lethal risk.</p>
+          <div class="card-foot-tag red-tag">Result: Reveals victim location to attacker</div>
+        </div>
+
+        <div class="comparison-card success">
+          <div class="card-status-strip yellow">ECHO AUTONOMOUS SYSTEM // SILENT DISPATCH</div>
+          <h3>Encrypted Silent Escalation</h3>
+          <p>ECHO triggers silent emergency dispatches: sending high-priority Telegram alerts with live GPS coordinate markers and initiating automated Twilio synthetic voice calls to trusted contacts with dynamic incident transcripts.</p>
+          <div class="card-foot-tag yellow-tag">Result: Silent transmission without uttering a sound</div>
+        </div>
+
+        <div class="comparison-card fail">
+          <div class="card-status-strip red">SIMPLE DECIBEL SPIKE SENSORS // FALSE ALARMS</div>
+          <h3>Cinema &amp; Television False Positives</h3>
+          <p>Basic sound alarm devices trigger whenever a movie explosion plays, an action videogame is active, or a phone is dropped on the floor, causing police fines and alert fatigue.</p>
+          <div class="card-foot-tag red-tag">Result: High false-positive rate, rejected by users</div>
+        </div>
+
+        <div class="comparison-card success">
+          <div class="card-status-strip yellow">ECHO AUTONOMOUS SYSTEM // TWO-PASS ML DEFENSE</div>
+          <h3>Acoustic Media Playback Filter</h3>
+          <p>Dual-pass neural architecture pairs YAMNet embedding verification with an acoustic media-playback discriminator and sudden device motion sensor, actively suppressing movie scenes and game sounds.</p>
+          <div class="card-foot-tag yellow-tag">Result: Cinema audio suppressed, genuine hazards confirmed</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 2: How It Works / 4-Stage Autonomous Pipeline -->
+  <section class="landing-section bg-alt" id="how-it-works">
+    <div class="landing-container">
+      <div class="section-label-bar">
+        <span class="sec-index">02 //</span>
+        <span class="sec-title">OPERATIONAL WORKFLOW</span>
+      </div>
+      <h2 class="section-heading">FROM SOUND WAVE TO DISPATCHED HELP IN 3 SECONDS</h2>
+      <p class="section-subtext">An autonomous 4-stage pipeline running continuously on your device without compromising confidentiality.</p>
+
+      <div class="pipeline-grid">
+        <div class="step-card">
+          <div class="step-num">STAGE 01</div>
+          <div class="step-icon">⌁</div>
+          <h4>Ephemeral Audio Ingestion</h4>
+          <p>Continuous 5.0-second sliding windows are ingested via standard microphone inputs at 16kHz. The buffer lives exclusively in volatile memory and is instantly overwritten after feature calculation.</p>
+          <div class="step-badge">16kHz WebAudio API</div>
+        </div>
+
+        <div class="step-card">
+          <div class="step-num">STAGE 02</div>
+          <div class="step-icon">◈</div>
+          <h4>Two-Pass ML Verification</h4>
+          <p>Pass 1 uses YAMNet transfer learning for rapid hazard candidate extraction. Pass 2 executes a specialized neural hazard head, cross-checking media playback evidence before computing calibrated risk (0–100).</p>
+          <div class="step-badge">Dual-Pass Neural Model</div>
+        </div>
+
+        <div class="step-card">
+          <div class="step-num">STAGE 03</div>
+          <div class="step-icon">◎</div>
+          <h4>Multi-Channel Carrier Dispatch</h4>
+          <p>When verified risk score crosses safety thresholds, ECHO activates emergency protocol: firing Telegram alerts with live Google Maps coordinate pins and launching automated Twilio calls with speech synthesis.</p>
+          <div class="step-badge">Telegram + Twilio Voice</div>
+        </div>
+
+        <div class="step-card">
+          <div class="step-num">STAGE 04</div>
+          <div class="step-icon">⊕</div>
+          <h4>Tactical Geo-Spatial Radar</h4>
+          <p>Real-time reverse-geocoding resolves the user's physical street address and coordinates, instantly querying OpenStreetMap to locate the nearest emergency hospitals, police stations, and fire stations within 5km.</p>
+          <div class="step-badge">OpenStreetMap / Nominatim</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 3: Architecture Visual & Tactical Routing -->
+  <section class="landing-section" id="architecture">
+    <div class="landing-container">
+      <div class="section-label-bar">
+        <span class="sec-index">03 //</span>
+        <span class="sec-title">TACTICAL ARCHITECTURE</span>
+      </div>
+      <h2 class="section-heading">ENGINEERED FOR REAL-WORLD TELEMETRY RESILIENCE</h2>
+      <p class="section-subtext">A hardened infrastructure designed to operate on commodity hardware with carrier redundancy and fail-safe simulation.</p>
+
+      <div class="architecture-showcase">
+        <div class="arch-img-frame">
+          <img src="/assets/echo_dispatch.jpg" alt="ECHO Emergency Dispatch & Tactical Routing System" class="landing-arch-img">
+        </div>
+        <div class="arch-points">
+          <div class="arch-point-card">
+            <span class="point-num">A</span>
+            <div>
+              <strong>Carrier Redundancy &amp; Fallback Simulation</strong>
+              <p>ECHO validates outbound notification pipelines in advance. If cellular carrier services or trial accounts hit rate limits, safe simulation mode logs dispatch receipts for verification without dropping safety.</p>
+            </div>
+          </div>
+          <div class="arch-point-card">
+            <span class="point-num">B</span>
+            <div>
+              <strong>Grace-Period Abort Mechanism</strong>
+              <p>When an alert triggers, ECHO displays a 12-second countdown with an "I'M SAFE" manual cancel button, allowing users to avert unintended dispatches before carrier calls are initiated.</p>
+            </div>
+          </div>
+          <div class="arch-point-card">
+            <span class="point-num">C</span>
+            <div>
+              <strong>Tamper-Resistant Local Audit Trail</strong>
+              <p>Every incident records decibel peaks, acoustic candidate classifications, confidence intervals, and delivery timestamps, providing verifiable digital evidence for law enforcement.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 4: 8-Class Hazard Matrix -->
+  <section class="landing-section bg-alt" id="hazard-matrix">
+    <div class="landing-container">
+      <div class="section-label-bar">
+        <span class="sec-index">04 //</span>
+        <span class="sec-title">ACOUSTIC SPECTRUM</span>
+      </div>
+      <h2 class="section-heading">CLASSIFICATION MATRIX &amp; THREAT SIGNATURES</h2>
+      <p class="section-subtext">Trained specifically on real-world acoustic hazard datasets to recognize distinct violent event characteristics.</p>
+
+      <div class="matrix-grid">
+        <div class="hazard-card">
+          <div class="hazard-head">
+            <span class="hazard-icon">💥</span>
+            <span class="hazard-tag high">HIGH_RISK · 94</span>
+          </div>
+          <h4>GUNSHOT</h4>
+          <p>Ballistic muzzle impulse and supersonic crack. High acoustic energy transient.</p>
+          <div class="hazard-meta">Threshold: Immediate Escalation</div>
+        </div>
+
+        <div class="hazard-card">
+          <div class="hazard-head">
+            <span class="hazard-icon">😱</span>
+            <span class="hazard-tag high">HIGH_RISK · 92</span>
+          </div>
+          <h4>DISTRESS SCREAM</h4>
+          <p>High-pitch human vocal panic transient with non-periodic chaotic vocal fold turbulence.</p>
+          <div class="hazard-meta">Threshold: Immediate Escalation</div>
+        </div>
+
+        <div class="hazard-card">
+          <div class="hazard-head">
+            <span class="hazard-icon">🪟</span>
+            <span class="hazard-tag warning">POSSIBLE_DANGER · 78</span>
+          </div>
+          <h4>GLASS BREAK</h4>
+          <p>High-frequency structural fracture transient indicative of forced window/door entry.</p>
+          <div class="hazard-meta">Threshold: 12s Verification Window</div>
+        </div>
+
+        <div class="hazard-card">
+          <div class="hazard-head">
+            <span class="hazard-icon">💣</span>
+            <span class="hazard-tag high">HIGH_RISK · 96</span>
+          </div>
+          <h4>EXPLOSION</h4>
+          <p>Low-frequency detonation rumble followed by high-energy concussive shockwave.</p>
+          <div class="hazard-meta">Threshold: Priority Dispatch</div>
+        </div>
+
+        <div class="hazard-card">
+          <div class="hazard-head">
+            <span class="hazard-icon">🚨</span>
+            <span class="hazard-tag info">SUSPICIOUS · 65</span>
+          </div>
+          <h4>SIREN</h4>
+          <p>Modulated periodic tone from emergency vehicles or localized civil defense alarms.</p>
+          <div class="hazard-meta">Threshold: Logged &amp; Monitored</div>
+        </div>
+
+        <div class="hazard-card">
+          <div class="hazard-head">
+            <span class="hazard-icon">🔔</span>
+            <span class="hazard-tag high">HIGH_RISK · 90</span>
+          </div>
+          <h4>FIRE ALARM</h4>
+          <p>Continuous temporal strobe horn signaling structural fire, smoke, or gas leak.</p>
+          <div class="hazard-meta">Threshold: Immediate Escalation</div>
+        </div>
+
+        <div class="hazard-card">
+          <div class="hazard-head">
+            <span class="hazard-icon">🎆</span>
+            <span class="hazard-tag warning">DEMO HEAD · 85</span>
+          </div>
+          <h4>FIRECRACKER (DEMO)</h4>
+          <p>Diwali and festival pyrotechnic signature mapped to gunshot telemetry for presentation verification without live munitions.</p>
+          <div class="hazard-meta">Configurable in Settings</div>
+        </div>
+
+        <div class="hazard-card">
+          <div class="hazard-head">
+            <span class="hazard-icon">🛡️</span>
+            <span class="hazard-tag success">MEDIA FILTER · 0</span>
+          </div>
+          <h4>MEDIA PLAYBACK DEFENSE</h4>
+          <p>Analyzes spectral spread to recognize television audio and gaming sounds, actively suppressing false alarms.</p>
+          <div class="hazard-meta">False-Positive Shield</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 5: Tactical Geo-Spatial Guidance -->
+  <section class="landing-section" id="tactical">
+    <div class="landing-container">
+      <div class="section-label-bar">
+        <span class="sec-index">05 //</span>
+        <span class="sec-title">GEO-SPATIAL RADAR</span>
+      </div>
+      <h2 class="section-heading">INSTANT TACTICAL NAVIGATION TO NEAREST HAVENS</h2>
+      <p class="section-subtext">When an emergency strikes, you need to know where safety is. ECHO automatically resolves your address and plots nearby critical infrastructure.</p>
+
+      <div class="tactical-grid">
+        <div class="tactical-info-card">
+          <h3>Surrounding Safe Havens Within 5 Kilometers</h3>
+          <p>ECHO connects directly with OpenStreetMap Nominatim and Overpass APIs to dynamically calculate distances and turn-by-turn directions to:</p>
+          <ul class="tactical-list">
+            <li><strong>Police Stations &amp; Precincts:</strong> Instant route planning to nearest law enforcement officers.</li>
+            <li><strong>Trauma Centers &amp; Emergency Rooms:</strong> Fast medical evacuation paths for injury triage.</li>
+            <li><strong>Fire Departments &amp; Rescue Stations:</strong> Direct routing for structural hazards or gas leaks.</li>
+          </ul>
+          <p class="tactical-sub">All facility links are directly embedded into Telegram dispatch messages sent to your trusted contacts, allowing them to coordinate rescue with local authorities instantly.</p>
+        </div>
+
+        <div class="tactical-preview-card">
+          <div class="preview-header">
+            <span>TACTICAL COORDINATE RADAR</span>
+            <span class="badge-live">LIVE GEO-CODER</span>
+          </div>
+          <div class="radar-box">
+            <div class="radar-circle c1"></div>
+            <div class="radar-circle c2"></div>
+            <div class="radar-crosshair h"></div>
+            <div class="radar-crosshair v"></div>
+            <div class="radar-ping"></div>
+            <div class="radar-node p1" title="Police Precinct">🚓 0.8km</div>
+            <div class="radar-node p2" title="Hospital ER">🏥 1.4km</div>
+            <div class="radar-node p3" title="Fire Station">🚒 2.1km</div>
+          </div>
+          <div class="preview-footer">
+            <span>AUTOMATIC NOMINATIM REVERSE GEOCODING</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 6: Privacy Architecture -->
+  <section class="landing-section bg-alt" id="privacy">
+    <div class="landing-container">
+      <div class="section-label-bar">
+        <span class="sec-index">06 //</span>
+        <span class="sec-title">PRIVACY FIRST</span>
+      </div>
+      <h2 class="section-heading">SAFETY WITHOUT SURVEILLANCE: ZERO CLOUD AUDIO</h2>
+      <p class="section-subtext">You should never have to sacrifice personal privacy to protect your physical safety.</p>
+
+      <div class="privacy-grid">
+        <div class="privacy-card">
+          <div class="privacy-icon">🔒</div>
+          <h4>Ephemeral Audio Buffers Only</h4>
+          <p>Incoming audio is held in RAM solely for the duration of the 5.0-second analysis window. Raw audio files are NEVER stored on a disk or transmitted to external servers unless an active, verified threat triggers an emergency dispatch.</p>
+        </div>
+
+        <div class="privacy-card">
+          <div class="privacy-icon">🛡️</div>
+          <h4>Local-Only Profile Authentication</h4>
+          <p>Your session identity, contact names, and configuration preferences stay stored locally in your browser's private storage. No tracking cookies, no advertising telemetry, no third-party data broker sharing.</p>
+        </div>
+
+        <div class="privacy-card">
+          <div class="privacy-icon">📋</div>
+          <h4>Full Transparency Audit Trail</h4>
+          <p>You have full visibility into every event ever recorded. Check detection timestamps, model confidence scores, and purged cached telemetry anytime via the Event History screen.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 7: FAQ -->
+  <section class="landing-section" id="faq">
+    <div class="landing-container">
+      <div class="section-label-bar">
+        <span class="sec-index">07 //</span>
+        <span class="sec-title">FREQUENTLY ASKED QUESTIONS</span>
+      </div>
+      <h2 class="section-heading">EVERYTHING YOU NEED TO KNOW ABOUT ECHO</h2>
+
+      <div class="faq-grid">
+        <div class="faq-card">
+          <h4>Do I need expensive specialty microphone hardware?</h4>
+          <p>No. ECHO was engineered to operate on commodity hardware using standard built-in microphones found on modern smartphones, laptops, tablets, and desktop webcams via standard 16kHz audio streams.</p>
+        </div>
+
+        <div class="faq-card">
+          <h4>Will watching television or action movies trigger alarms?</h4>
+          <p>No. ECHO's two-pass architecture incorporates an automatic media-playback acoustic discriminator that checks for continuous spectral dispersion characteristic of cinema soundtracks, actively suppressing false alarms.</p>
+        </div>
+
+        <div class="faq-card">
+          <h4>What if an alert is triggered by accident?</h4>
+          <p>ECHO provides a mandatory 12-second abort countdown window with an audio alert and a high-visibility "I'M SAFE" button. Tapping this cancels the escalation immediately before voice calls are made.</p>
+        </div>
+
+        <div class="faq-card">
+          <h4>Can I test the system without actually alerting authorities?</h4>
+          <p>Yes. The built-in Demo Lab allows you to inject prepared sound signatures (gunshot, scream, fireworks, siren) into the detection pipeline safely. Rehearsal mode simulates carrier delivery with zero actual calls placed.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 8: Final CTA -->
+  <section class="landing-cta-banner" id="get-started">
+    <div class="landing-container">
+      <div class="cta-box">
+        <span class="cta-tag">GET STARTED WITH ECHO TODAY</span>
+        <h2>EXPERIENCE AUTONOMOUS PERSONAL ACOUSTIC DEFENSE.</h2>
+        <p>No installation required. Instant access on this device with full access to live acoustic monitoring, demo signatures, and contact configuration.</p>
+        <button type="button" class="landing-cta-primary dark open-login-btn">
+          <span>ENTER ECHO CONSOLE // SIGN UP</span>
+          <span class="arrow">↗</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="landing-footer">
+    <div class="landing-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="brand-mark"><i></i></span>
+          <strong>ECHO // EMERGENCY ACOUSTIC SYSTEM</strong>
+          <p>Autonomous acoustic hazard detection and multi-channel emergency guidance.</p>
+        </div>
+        <div class="footer-links">
+          <a href="#why-echo">Why Echo</a>
+          <a href="#how-it-works">How It Works</a>
+          <a href="#architecture">Architecture</a>
+          <a href="#hazard-matrix">Hazard Matrix</a>
+          <a href="#privacy">Privacy</a>
+          <a href="#faq">FAQ</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 ECHO SAFETY PROJECT · PROTOCOL SPECIFICATION 2.0</span>
+        <span class="system-status-indicator"><span class="dot green"></span> SYSTEM OPERATIONAL · PORT 8010</span>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<div class="login-overlay" id="login-overlay" role="dialog" aria-modal="true" aria-labelledby="login-title" hidden style="display:none">
   <div class="login-card">
+    <button type="button" class="login-modal-close" id="login-close-btn" aria-label="Close dialog">×</button>
     <div class="login-mark"><i></i></div>
     <h1 id="login-title">ECHO</h1>
     <p class="login-tagline">Acoustic hazard detection that calls the people who can help.</p>
@@ -40,6 +523,7 @@
       <button class="nav-item" data-screen="contacts"><span class="nav-icon">◎</span><span>Trusted contacts</span></button>
       <button class="nav-item" data-screen="demo"><span class="nav-icon">▷</span><span>Demo lab</span></button>
       <button class="nav-item" data-screen="settings"><span class="nav-icon">⚙</span><span>Settings</span></button>
+      <button class="nav-item" id="sidebar-homepage-btn"><span class="nav-icon">⎋</span><span>Portal View</span></button>
     </nav>
     <div class="sidebar-foot">
       <div class="session-chip"><span id="session-name">Signed in</span><button id="sign-out-btn" title="Sign out">Sign out</button></div>
@@ -368,6 +852,6 @@
 
 <div class="toast-stack" id="toast-stack" aria-live="polite"></div>
 
-<script src="app.js?v=8"></script>
+<script src="app.js?v=10"></script>
 </body>
 </html>

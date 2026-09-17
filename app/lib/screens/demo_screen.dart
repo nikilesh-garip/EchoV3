@@ -251,20 +251,39 @@ class _DemoScreenState extends State<DemoScreen> {
         return ListView(
           padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
           children: [
-            const FadeSlideIn(
+            FadeSlideIn(
               index: 0,
-              child: Text(
-                'Demo & panel verification',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    '14 // LAB INJECTION BENCH',
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 1.5,
+                      color: AppColors.inkMuted,
+                    ),
+                  ),
+                  SizedBox(height: 2),
+                  Text(
+                    'TELEMETRY INJECTION',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 0.5,
+                      color: AppColors.ink,
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: 8),
             const FadeSlideIn(
               index: 0,
               child: Text(
-                'Each button injects a prepared clip into the real /detect pipeline — same '
-                'model, same risk scorer, same escalation. Only room acoustics are bypassed.',
-                style: TextStyle(fontSize: 13, color: AppColors.inkMuted, height: 1.5),
+                'Directly stream calibrated acoustic recordings into the live verification model. Exercises full two-pass classifier, dynamic risk scorer, and escalation state machine.',
+                style: TextStyle(fontSize: 12, color: AppColors.inkMuted, height: 1.5),
               ),
             ),
             const SizedBox(height: 18),
@@ -273,46 +292,58 @@ class _DemoScreenState extends State<DemoScreen> {
             FadeSlideIn(
               index: 2,
               child: AppCard(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
+                hasShadow: true,
+                shadowOffset: 3,
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 child: SwitchListTile(
+                  activeThumbColor: AppColors.primary,
                   contentPadding: const EdgeInsets.symmetric(horizontal: 8),
                   title: const Text(
-                    'Escalate to contacts',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                    'OUTBOUND DISPATCH ESCALATION',
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w900, letterSpacing: 0.3),
                   ),
                   subtitle: const Text(
-                    'Runs the real countdown, call, and Telegram delivery for demo detections.',
-                    style: TextStyle(fontSize: 12, color: AppColors.inkMuted),
+                    'Arm real abort countdown, automated voice relay, and Telegram coordinate dispatch during demo tests.',
+                    style: TextStyle(fontSize: 11, color: AppColors.inkMuted),
                   ),
                   value: _escalate,
                   onChanged: (value) => setState(() => _escalate = value),
                 ),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 14),
             FadeSlideIn(
               index: 3,
-              child: Text(
-                'Media playback ${widget.mediaPlayback ? "ON" : "OFF"} · '
-                'Sudden motion ${widget.suddenMotion ? "ON" : "OFF"} · '
-                'Threshold ${widget.sensitivityThreshold.toStringAsFixed(2)}',
-                style: const TextStyle(fontSize: 11, color: AppColors.inkFaint),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                decoration: BoxDecoration(
+                  color: AppColors.surfaceAlt,
+                  border: Border.all(color: AppColors.lineSubtle, width: 1),
+                ),
+                child: Text(
+                  'ACTIVE CONTEXT // MEDIA SUPPRESSION: ${widget.mediaPlayback ? "ON" : "OFF"} · '
+                  'SUDDEN ACCEL: ${widget.suddenMotion ? "ON" : "OFF"} · '
+                  'THRESHOLD: ${widget.sensitivityThreshold.toStringAsFixed(2)}',
+                  style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w800, letterSpacing: 0.3, color: AppColors.inkMuted),
+                ),
               ),
             ),
             if (_statusMessage != null) ...[
               const SizedBox(height: 14),
               AppCard(
-                background: AppColors.infoSoft,
-                borderColor: const Color(0xFFBFDBFE),
+                background: AppColors.primary,
+                borderColor: AppColors.line,
+                hasShadow: true,
+                shadowOffset: 2,
                 padding: const EdgeInsets.all(14),
                 child: Text(
-                  _statusMessage!,
-                  style: const TextStyle(fontSize: 12, height: 1.5, color: Color(0xFF1E3A8A)),
+                  _statusMessage!.toUpperCase(),
+                  style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, height: 1.4, color: AppColors.ink),
                 ),
               ),
             ],
             const SizedBox(height: 22),
-            const SectionLabel('Inject a clip'),
+            const SectionLabel('15 // SOUND SIGNATURE REPOSITORY'),
             GridView.count(
               crossAxisCount: 2,
               shrinkWrap: true,
@@ -337,8 +368,10 @@ class _DemoScreenState extends State<DemoScreen> {
 
   Widget _buildProfileSwitch(AppSession session, String profile) {
     return AppCard(
-      background: profile == 'demo' ? AppColors.warningSoft : AppColors.surface,
-      borderColor: profile == 'demo' ? const Color(0xFFFDE68A) : AppColors.line,
+      hasShadow: true,
+      shadowOffset: 3,
+      background: profile == 'demo' ? AppColors.primary : AppColors.surface,
+      borderColor: AppColors.line,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -346,14 +379,14 @@ class _DemoScreenState extends State<DemoScreen> {
             children: [
               const Expanded(
                 child: Text(
-                  'Classifier head',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800),
+                  'CLASSIFIER ENGINE PROFILE',
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w900, letterSpacing: 0.5),
                 ),
               ),
               StatusPill(
-                label: profile == 'demo' ? 'DEMO' : 'PRODUCTION',
-                color: profile == 'demo' ? AppColors.warning : AppColors.primary,
-                background: profile == 'demo' ? Colors.white : AppColors.primarySoft,
+                label: profile == 'demo' ? 'DEMO PROFILE' : 'PRODUCTION',
+                color: AppColors.ink,
+                background: AppColors.surface,
               ),
             ],
           ),
@@ -364,8 +397,8 @@ class _DemoScreenState extends State<DemoScreen> {
                 child: _profileChoice(
                   session,
                   'real',
-                  'Production',
-                  'Real hazard audio only',
+                  'PRODUCTION',
+                  'Standard acoustic hazard library',
                   profile == 'real',
                 ),
               ),
@@ -374,8 +407,8 @@ class _DemoScreenState extends State<DemoScreen> {
                 child: _profileChoice(
                   session,
                   'demo',
-                  'Demo',
-                  'Adds firecracker → gunshot',
+                  'DEMO PROFILE',
+                  'Includes firecracker signature',
                   profile == 'demo',
                 ),
               ),
@@ -384,10 +417,8 @@ class _DemoScreenState extends State<DemoScreen> {
           if (profile == 'demo') ...[
             const SizedBox(height: 12),
             const Text(
-              'A Diwali cracker is classified as its own class and aliased to gunshot, so the '
-              'full alert path can be demonstrated with a sound that is safe to produce. '
-              'Everything it generates is stamped DEMO and keeps the raw firecracker class.',
-              style: TextStyle(fontSize: 11, color: Color(0xFF92400E), height: 1.5),
+              'Diwali firecracker audio is classified independently and mapped to gunshot telemetry for presentation verification without live munitions.',
+              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.ink, height: 1.4),
             ),
           ],
         ],
@@ -404,13 +435,12 @@ class _DemoScreenState extends State<DemoScreen> {
   ) {
     return PressableScale(
       onTap: () => session.setModelProfile(value),
-      child: AnimatedContainer(
-        duration: AppDurations.medium,
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         decoration: BoxDecoration(
-          color: selected ? AppColors.primary : AppColors.surface,
+          color: selected ? AppColors.ink : AppColors.surface,
           borderRadius: BorderRadius.circular(AppRadii.control),
-          border: Border.all(color: selected ? AppColors.primary : AppColors.line),
+          border: Border.all(color: AppColors.line, width: 1.5),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -418,18 +448,20 @@ class _DemoScreenState extends State<DemoScreen> {
             Text(
               title,
               style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w800,
-                color: selected ? Colors.white : AppColors.ink,
+                fontSize: 11,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 0.5,
+                color: selected ? AppColors.surface : AppColors.ink,
               ),
             ),
             const SizedBox(height: 2),
             Text(
               subtitle,
               style: TextStyle(
-                fontSize: 10,
+                fontSize: 9,
+                fontWeight: FontWeight.w600,
                 height: 1.3,
-                color: selected ? Colors.white70 : AppColors.inkMuted,
+                color: selected ? AppColors.surface.withValues(alpha: 0.8) : AppColors.inkMuted,
               ),
             ),
           ],
@@ -441,52 +473,61 @@ class _DemoScreenState extends State<DemoScreen> {
   Widget _buildClassButton(String soundClass) {
     final busy = _busyClass == soundClass;
     final isFirecracker = soundClass == 'firecracker';
-    final color = soundClass == 'normal'
-        ? AppColors.success
-        : isFirecracker
-            ? AppColors.warning
-            : AppColors.danger;
+    final isNormal = soundClass == 'normal';
 
     return PressableScale(
       onTap: _busyClass == null ? () => _runDemoClip(soundClass) : null,
-      child: AnimatedContainer(
-        duration: AppDurations.medium,
-        padding: const EdgeInsets.all(14),
+      child: Container(
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: busy ? color.withOpacity(0.12) : AppColors.surface,
-          borderRadius: BorderRadius.circular(AppRadii.card),
-          border: Border.all(color: busy ? color : AppColors.line),
-          boxShadow: softShadow(opacity: 0.04, blur: 14, y: 4),
+          color: busy ? AppColors.primary : AppColors.surface,
+          borderRadius: BorderRadius.circular(AppRadii.control),
+          border: Border.all(
+            color: AppColors.line,
+            width: 1.5,
+          ),
+          boxShadow: neoShadow(offset: 2),
         ),
         child: Row(
           children: [
             Container(
-              width: 36,
-              height: 36,
+              width: 34,
+              height: 34,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.12),
-                borderRadius: BorderRadius.circular(10),
+                color: isNormal
+                    ? AppColors.surfaceAlt
+                    : isFirecracker
+                        ? AppColors.primary
+                        : AppColors.surfaceAlt,
+                borderRadius: BorderRadius.circular(AppRadii.control / 2),
+                border: Border.all(color: AppColors.line, width: 1.2),
               ),
               child: busy
-                  ? Padding(
-                      padding: const EdgeInsets.all(9),
-                      child: CircularProgressIndicator(strokeWidth: 2, color: color),
+                  ? const Padding(
+                      padding: EdgeInsets.all(8),
+                      child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.ink),
                     )
                   : Icon(
                       isFirecracker
                           ? Icons.celebration_outlined
-                          : soundClass == 'normal'
+                          : isNormal
                               ? Icons.check_circle_outline
                               : Icons.volume_up_outlined,
-                      size: 18,
-                      color: color,
+                      size: 17,
+                      color: AppColors.ink,
                     ),
             ),
             const SizedBox(width: 10),
             Expanded(
               child: Text(
                 soundClass.replaceAll('_', ' ').toUpperCase(),
-                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, height: 1.2),
+                style: const TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 0.3,
+                  color: AppColors.ink,
+                  height: 1.2,
+                ),
               ),
             ),
           ],

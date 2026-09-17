@@ -157,34 +157,30 @@ class _AlertScreenState extends State<AlertScreen> {
   Widget _buildHeader(Color color) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(20, 22, 20, 26),
+      padding: const EdgeInsets.fromLTRB(20, 22, 20, 22),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [color, Color.lerp(color, AppColors.ink, 0.35)!],
-        ),
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(28),
-          bottomRight: Radius.circular(28),
+        color: AppColors.primary,
+        border: const Border(
+          bottom: BorderSide(color: AppColors.line, width: 2),
         ),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               const StatusPill(
-                label: 'CRITICAL ALERT',
-                color: AppColors.danger,
-                background: Colors.white,
+                label: 'CRITICAL ALERT // PROTOCOL ACTIVATED',
+                color: AppColors.ink,
+                background: AppColors.surface,
                 icon: Icons.warning_amber_rounded,
               ),
               const Spacer(),
               if (widget.profile == 'demo')
                 const StatusPill(
                   label: 'DEMO PROFILE',
-                  color: AppColors.warning,
-                  background: Colors.white,
+                  color: AppColors.ink,
+                  background: AppColors.surface,
                   icon: Icons.science_outlined,
                 ),
             ],
@@ -193,23 +189,41 @@ class _AlertScreenState extends State<AlertScreen> {
           Text(
             widget.threatClass.replaceAll('_', ' ').toUpperCase(),
             style: const TextStyle(
-              fontSize: 28,
+              fontSize: 26,
               fontWeight: FontWeight.w900,
-              color: Colors.white,
-              letterSpacing: 1.2,
+              color: AppColors.ink,
+              letterSpacing: 1.0,
             ),
           ),
           if (widget.rawClass != null && widget.rawClass != widget.threatClass) ...[
-            const SizedBox(height: 6),
+            const SizedBox(height: 4),
             Text(
-              'Raw acoustic class: ${widget.rawClass}',
-              style: const TextStyle(fontSize: 12, color: Colors.white70),
+              'RAW ACOUSTIC SIGNATURE: ${widget.rawClass!.toUpperCase()}',
+              style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.5,
+                color: AppColors.inkMuted,
+              ),
             ),
           ],
-          const SizedBox(height: 10),
-          Text(
-            'Risk ${widget.riskScore}/100 · ${widget.riskLevel.replaceAll('_', ' ')}',
-            style: const TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w600),
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(AppRadii.control),
+              border: Border.all(color: AppColors.line, width: 1.2),
+            ),
+            child: Text(
+              'THREAT SCORE ${widget.riskScore}/100 · ${widget.riskLevel.replaceAll('_', ' ')}',
+              style: const TextStyle(
+                fontSize: 12,
+                color: AppColors.ink,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 0.5,
+              ),
+            ),
           ),
         ],
       ),
@@ -275,30 +289,30 @@ class _AlertScreenState extends State<AlertScreen> {
   }
 
   Widget _buildCountdownCard(Map<String, dynamic> incident) {
-    final remaining = (incident['seconds_to_dispatch'] as num?)?.toDouble() ?? 0;
-    final total = _countdownTotal > 0 ? _countdownTotal : (remaining > 0 ? remaining : 12);
+    final remaining = (incident['seconds_to_dispatch'] as num?)?.toDouble() ?? 0.0;
+    final total = _countdownTotal > 0 ? _countdownTotal : (remaining > 0 ? remaining : 12.0);
     return AppCard(
-      background: AppColors.dangerSoft,
-      borderColor: const Color(0xFFFCA5A5),
+      hasShadow: true,
+      shadowOffset: 4,
+      borderColor: AppColors.line,
       child: Column(
         children: [
           const Text(
-            'CALLING YOUR EMERGENCY CONTACTS',
+            'ESC // DISPATCH SEQUENCE ARMED',
             style: TextStyle(
               fontSize: 12,
-              letterSpacing: 1.1,
-              fontWeight: FontWeight.w800,
-              color: AppColors.danger,
+              letterSpacing: 1.2,
+              fontWeight: FontWeight.w900,
+              color: AppColors.vermilion,
             ),
           ),
           const SizedBox(height: 14),
           CountdownRing(remainingSeconds: remaining, totalSeconds: total),
           const SizedBox(height: 14),
           const Text(
-            'They will hear an automated call with the 5 seconds Echo recorded, and receive '
-            'the same clip plus your location on Telegram.',
+            'Automated voice alert with 5s acoustic recording and Telegram GPS coordinates will broadcast to all registered emergency contacts upon countdown expiry.',
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 13, color: Color(0xFF7F1D1D), height: 1.5),
+            style: TextStyle(fontSize: 12, color: AppColors.inkMuted, height: 1.5),
           ),
           const SizedBox(height: 16),
           Row(
@@ -307,9 +321,17 @@ class _AlertScreenState extends State<AlertScreen> {
                 child: PressableScale(
                   child: ElevatedButton.icon(
                     onPressed: _busy ? null : _cancel,
-                    style: ElevatedButton.styleFrom(backgroundColor: AppColors.success),
-                    icon: const Icon(Icons.shield_outlined, size: 18),
-                    label: const Text("I'M SAFE"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: AppColors.ink,
+                      side: const BorderSide(color: AppColors.line, width: 1.5),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
+                    icon: const Icon(Icons.shield_outlined, size: 18, color: AppColors.ink),
+                    label: const Text(
+                      "ABORT // I'M SAFE",
+                      style: TextStyle(fontWeight: FontWeight.w900, letterSpacing: 0.5),
+                    ),
                   ),
                 ),
               ),
@@ -318,9 +340,17 @@ class _AlertScreenState extends State<AlertScreen> {
                 child: PressableScale(
                   child: ElevatedButton.icon(
                     onPressed: _busy ? null : _dispatchNow,
-                    style: ElevatedButton.styleFrom(backgroundColor: AppColors.danger),
-                    icon: const Icon(Icons.campaign_outlined, size: 18),
-                    label: const Text('ALERT NOW'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.ink,
+                      foregroundColor: AppColors.surface,
+                      side: const BorderSide(color: AppColors.line, width: 1.5),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
+                    icon: const Icon(Icons.campaign_outlined, size: 18, color: AppColors.surface),
+                    label: const Text(
+                      'FORCE DISPATCH',
+                      style: TextStyle(fontWeight: FontWeight.w900, letterSpacing: 0.5),
+                    ),
                   ),
                 ),
               ),
@@ -339,20 +369,42 @@ class _AlertScreenState extends State<AlertScreen> {
     required String body,
   }) {
     return AppCard(
+      hasShadow: true,
+      shadowOffset: 3,
       background: background,
-      borderColor: color.withOpacity(0.35),
+      borderColor: AppColors.line,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 22, color: color),
+          Container(
+            width: 32,
+            height: 32,
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(AppRadii.control / 2),
+              border: Border.all(color: AppColors.line, width: 1.2),
+            ),
+            child: Icon(icon, size: 18, color: AppColors.ink),
+          ),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: color)),
+                Text(
+                  title.toUpperCase(),
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 0.5,
+                    color: AppColors.ink,
+                  ),
+                ),
                 const SizedBox(height: 6),
-                Text(body, style: const TextStyle(fontSize: 13, height: 1.5, color: AppColors.ink)),
+                Text(
+                  body,
+                  style: const TextStyle(fontSize: 12, height: 1.5, color: AppColors.inkMuted),
+                ),
               ],
             ),
           ),
@@ -366,17 +418,6 @@ class _AlertScreenState extends State<AlertScreen> {
       (incident['attempts'] as Iterable?) ?? const [],
     );
     final anySimulated = attempts.any((a) => a['status'] == 'simulated');
-    // The backend reverse-geocodes the place label it was given (see
-    // backend/geocode.py) once the incident actually dispatches, but this
-    // card also renders for state == DISPATCHING -- the brief window after
-    // an incident is claimed for dispatch but before the geocode call has
-    // resolved and persisted a real address. During exactly that window,
-    // place_label is still whatever placeholder the app sent when creating
-    // the incident (see live_monitor_screen.dart / demo_screen.dart:
-    // 'Last known location'). Filter that placeholder out explicitly so
-    // this never displays it as if it were a real resolved address; the
-    // location line just doesn't show for a poll or two until the real one
-    // lands, which self-corrects well before the user could act on it.
     final rawPlaceLabel = incident['place_label']?.toString();
     final placeLabel =
         (rawPlaceLabel == null || rawPlaceLabel == 'Last known location' || rawPlaceLabel.isEmpty)
@@ -384,56 +425,87 @@ class _AlertScreenState extends State<AlertScreen> {
             : rawPlaceLabel;
 
     return AppCard(
+      hasShadow: true,
+      shadowOffset: 3,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(Icons.campaign, size: 20, color: AppColors.danger),
+              Container(
+                width: 28,
+                height: 28,
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  borderRadius: BorderRadius.circular(AppRadii.control / 2),
+                  border: Border.all(color: AppColors.line, width: 1.2),
+                ),
+                child: const Icon(Icons.campaign, size: 16, color: AppColors.ink),
+              ),
               const SizedBox(width: 10),
               const Expanded(
                 child: Text(
-                  'Contacts alerted',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+                  'ESCALATION DISPATCH LOG',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 0.5,
+                    color: AppColors.ink,
+                  ),
                 ),
               ),
               if (anySimulated)
                 const StatusPill(
                   label: 'SIMULATED',
-                  color: AppColors.info,
-                  background: AppColors.infoSoft,
+                  color: AppColors.ink,
+                  background: AppColors.surfaceAlt,
                 ),
             ],
           ),
           const SizedBox(height: 14),
           if (attempts.isEmpty)
             const Text(
-              'Dispatching…',
-              style: TextStyle(fontSize: 13, color: AppColors.inkMuted),
+              'DISPATCHING...',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.5,
+                color: AppColors.inkMuted,
+              ),
             ),
           ...attempts.map(_buildAttemptRow),
           if (placeLabel != null && placeLabel.isNotEmpty) ...[
             const SizedBox(height: 4),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Icon(Icons.place_outlined, size: 16, color: AppColors.inkMuted),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    'Location sent: $placeLabel',
-                    style: const TextStyle(fontSize: 11, color: AppColors.inkMuted, height: 1.4),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              decoration: BoxDecoration(
+                color: AppColors.surfaceAlt,
+                border: Border.all(color: AppColors.lineSubtle, width: 1),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(Icons.place_outlined, size: 16, color: AppColors.ink),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'DISPATCH COORDINATE: $placeLabel',
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.ink,
+                        height: 1.4,
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
           if (anySimulated) ...[
             const SizedBox(height: 10),
             const Text(
-              'Simulated means the channel is not configured yet, so the message was composed '
-              'and logged but not sent. Configure the Telegram bot token and the call provider '
-              'in the backend .env to make these real.',
+              'Simulated transmission: Bot tokens/SIP credentials pending. Payload logged to disk.',
               style: TextStyle(fontSize: 11, color: AppColors.inkMuted, height: 1.5),
             ),
           ],
@@ -446,9 +518,9 @@ class _AlertScreenState extends State<AlertScreen> {
     final status = attempt['status']?.toString() ?? 'unknown';
     final channel = attempt['channel']?.toString() ?? 'unknown';
     final color = switch (status) {
-      'sent' => AppColors.success,
-      'simulated' => AppColors.info,
-      _ => AppColors.danger,
+      'sent' => AppColors.ink,
+      'simulated' => AppColors.inkMuted,
+      _ => AppColors.vermilion,
     };
     final icon = switch (channel) {
       'telegram' => Icons.send_outlined,
@@ -465,10 +537,10 @@ class _AlertScreenState extends State<AlertScreen> {
             width: 34,
             height: 34,
             decoration: BoxDecoration(
-              color: color.withOpacity(0.12),
-              borderRadius: BorderRadius.circular(10),
+              color: status == 'sent' ? AppColors.primary : AppColors.surfaceAlt,
+              border: Border.all(color: AppColors.line, width: 1.2),
             ),
-            child: Icon(icon, size: 17, color: color),
+            child: Icon(icon, size: 16, color: AppColors.ink),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -476,9 +548,9 @@ class _AlertScreenState extends State<AlertScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${attempt['contact_name'] ?? 'Contact'} · '
-                  '${channel == 'voice_call' ? 'Automated call' : 'Telegram'}',
-                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+                  '${(attempt['contact_name'] ?? 'Contact').toString().toUpperCase()} · '
+                  '${channel == 'voice_call' ? 'AUTOMATED CALL' : 'TELEGRAM'}',
+                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, letterSpacing: 0.3),
                 ),
                 const SizedBox(height: 2),
                 Text(
@@ -492,7 +564,7 @@ class _AlertScreenState extends State<AlertScreen> {
           StatusPill(
             label: status.toUpperCase(),
             color: color,
-            background: color.withOpacity(0.12),
+            background: AppColors.surfaceAlt,
           ),
         ],
       ),
@@ -501,6 +573,8 @@ class _AlertScreenState extends State<AlertScreen> {
 
   Widget _buildEvidenceCard() {
     return AppCard(
+      hasShadow: true,
+      shadowOffset: 3,
       child: Row(
         children: [
           RiskGauge(score: widget.riskScore, level: widget.riskLevel, size: 110),
@@ -509,15 +583,20 @@ class _AlertScreenState extends State<AlertScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _confidenceLine('Pass 1 · primary', widget.p1Conf),
+                _confidenceLine('PASS 1 · PRIMARY (2S)', widget.p1Conf),
                 const SizedBox(height: 12),
-                _confidenceLine('Pass 2 · verification', widget.p2Conf),
+                _confidenceLine('PASS 2 · VERIFICATION (5S)', widget.p2Conf),
                 const SizedBox(height: 12),
                 Text(
                   _incident?['has_clip'] == true
-                      ? '5-second evidence clip stored and attached to the alert.'
-                      : 'No evidence clip stored for this detection.',
-                  style: const TextStyle(fontSize: 11, color: AppColors.inkMuted, height: 1.4),
+                      ? '5-second high-fidelity acoustic evidence preserved.'
+                      : 'Zero evidence clip archived.',
+                  style: const TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.inkMuted,
+                    height: 1.4,
+                  ),
                 ),
               ],
             ),
@@ -534,21 +613,34 @@ class _AlertScreenState extends State<AlertScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(label, style: const TextStyle(fontSize: 12, color: AppColors.inkMuted)),
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.3,
+                color: AppColors.inkMuted,
+              ),
+            ),
             Text(
               '${(value * 100).toStringAsFixed(0)}%',
-              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800),
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w900, color: AppColors.ink),
             ),
           ],
         ),
         const SizedBox(height: 6),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(6),
-          child: LinearProgressIndicator(
-            value: value.clamp(0.0, 1.0),
-            minHeight: 6,
-            backgroundColor: AppColors.surfaceAlt,
-            valueColor: const AlwaysStoppedAnimation(AppColors.primary),
+        Container(
+          height: 8,
+          decoration: BoxDecoration(
+            color: AppColors.surfaceAlt,
+            border: Border.all(color: AppColors.line, width: 1),
+          ),
+          child: FractionallySizedBox(
+            alignment: Alignment.centerLeft,
+            widthFactor: value.clamp(0.0, 1.0),
+            child: Container(
+              color: AppColors.primary,
+            ),
           ),
         ),
       ],
@@ -557,21 +649,41 @@ class _AlertScreenState extends State<AlertScreen> {
 
   Widget _buildGuidanceCard() {
     return AppCard(
+      hasShadow: true,
+      shadowOffset: 3,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: widget.instructions
+            .asMap()
+            .entries
             .map(
-              (step) => Padding(
+              (entry) => Padding(
                 padding: const EdgeInsets.symmetric(vertical: 6),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(Icons.arrow_right_alt, size: 18, color: AppColors.accent),
+                    Container(
+                      width: 20,
+                      height: 20,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: AppColors.surfaceAlt,
+                        border: Border.all(color: AppColors.line, width: 1),
+                      ),
+                      child: Text(
+                        '0${entry.key + 1}',
+                        style: const TextStyle(
+                          fontSize: 9,
+                          fontWeight: FontWeight.w900,
+                          color: AppColors.ink,
+                        ),
+                      ),
+                    ),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
-                        step,
-                        style: const TextStyle(fontSize: 13, height: 1.5, color: AppColors.ink),
+                        entry.value,
+                        style: const TextStyle(fontSize: 12, height: 1.5, color: AppColors.ink),
                       ),
                     ),
                   ],
@@ -590,18 +702,33 @@ class _AlertScreenState extends State<AlertScreen> {
             (facility) => Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: AppCard(
+                hasShadow: true,
+                shadowOffset: 2,
                 padding: const EdgeInsets.all(14),
                 child: Row(
                   children: [
-                    const Icon(Icons.place_outlined, size: 18, color: AppColors.primary),
+                    Container(
+                      width: 32,
+                      height: 32,
+                      decoration: BoxDecoration(
+                        color: AppColors.primary,
+                        borderRadius: BorderRadius.circular(AppRadii.control / 2),
+                        border: Border.all(color: AppColors.line, width: 1.2),
+                      ),
+                      child: const Icon(Icons.place_outlined, size: 18, color: AppColors.ink),
+                    ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            facility['name']?.toString() ?? 'Unnamed',
-                            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+                            facility['name']?.toString().toUpperCase() ?? 'UNNAMED FACILITY',
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: 0.3,
+                            ),
                           ),
                           const SizedBox(height: 2),
                           Text(
@@ -625,18 +752,20 @@ class _AlertScreenState extends State<AlertScreen> {
       padding: const EdgeInsets.fromLTRB(20, 14, 20, 18),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        border: const Border(top: BorderSide(color: AppColors.line)),
-        boxShadow: softShadow(opacity: 0.06, blur: 20, y: -6),
+        border: const Border(top: BorderSide(color: AppColors.line, width: 1.5)),
       ),
       child: Row(
         children: [
           Expanded(
             child: PressableScale(
               child: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(backgroundColor: AppColors.danger),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.vermilion,
+                  foregroundColor: AppColors.surface,
+                  side: const BorderSide(color: AppColors.line, width: 1.5),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                ),
                 onPressed: () async {
-                  // User-initiated handoff only; Echo never dials emergency
-                  // services automatically. See docs/SAFETY_IMPLEMENTATION_PLAN.md.
                   final uri = Uri(scheme: 'tel', path: '112');
                   if (await canLaunchUrl(uri)) {
                     await launchUrl(uri);
@@ -646,16 +775,26 @@ class _AlertScreenState extends State<AlertScreen> {
                     );
                   }
                 },
-                icon: const Icon(Icons.call, size: 18),
-                label: const Text('CALL 112'),
+                icon: const Icon(Icons.call, size: 18, color: AppColors.surface),
+                label: const Text(
+                  'DIRECT CALL // 112',
+                  style: TextStyle(fontWeight: FontWeight.w900, letterSpacing: 0.5),
+                ),
               ),
             ),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                side: const BorderSide(color: AppColors.line, width: 1.5),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+              ),
               onPressed: () => Navigator.pop(context),
-              child: const Text('CLOSE'),
+              child: const Text(
+                'DISMISS VIEW',
+                style: TextStyle(fontWeight: FontWeight.w900, letterSpacing: 0.5, color: AppColors.ink),
+              ),
             ),
           ),
         ],

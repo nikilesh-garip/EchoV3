@@ -411,32 +411,57 @@ class _LiveMonitorScreenState extends State<LiveMonitorScreen> {
           index: 0,
           child: Row(
             children: [
-              const Expanded(
-                child: Text(
-                  'Live monitor',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Text(
+                      '01 // SENSOR TELEMETRY',
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 1.5,
+                        color: AppColors.inkMuted,
+                      ),
+                    ),
+                    SizedBox(height: 2),
+                    Text(
+                      'LIVE ACOUSTIC MONITOR',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 0.5,
+                        color: AppColors.ink,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               ValueListenableBuilder<String>(
                 valueListenable: AppSession.instance.modelProfile,
                 builder: (context, profile, _) => StatusPill(
-                  label: profile == 'demo' ? 'DEMO HEAD' : 'PRODUCTION HEAD',
-                  color: profile == 'demo' ? AppColors.warning : AppColors.primary,
-                  background: profile == 'demo' ? AppColors.warningSoft : AppColors.primarySoft,
+                  label: profile == 'demo' ? 'DEMO ENGINE' : 'PROD ENGINE',
+                  color: AppColors.ink,
+                  background: profile == 'demo' ? AppColors.primary : AppColors.surfaceAlt,
                   icon: profile == 'demo' ? Icons.science_outlined : Icons.verified_outlined,
                 ),
               ),
             ],
           ),
         ),
-        const SizedBox(height: 6),
+        const SizedBox(height: 8),
         FadeSlideIn(
           index: 0,
           child: Text(
             _isMonitoring
-                ? '$_stage · amplitude envelope of the live microphone'
-                : 'Start monitoring to analyse the room in 2-second windows.',
-            style: const TextStyle(fontSize: 13, color: AppColors.inkMuted),
+                ? 'STATE: ${_stage.toUpperCase()} // SAMPLING 16KHZ MONO STREAM'
+                : 'STANDBY // INITIATE ENGINE TO COMMENCE 2-SECOND DETECTION WINDOWS',
+            style: const TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.3,
+              color: AppColors.inkMuted,
+            ),
           ),
         ),
         const SizedBox(height: 16),
@@ -447,7 +472,7 @@ class _LiveMonitorScreenState extends State<LiveMonitorScreen> {
             active: _isMonitoring,
             color: AppColors.forRiskLevel(_riskLevel),
             height: 156,
-            overlayLabel: 'MIC · 16 kHz MONO',
+            overlayLabel: 'MIC STREAM · 16 kHz WAV',
           ),
         ),
         const SizedBox(height: 18),
@@ -457,27 +482,47 @@ class _LiveMonitorScreenState extends State<LiveMonitorScreen> {
             child: ElevatedButton.icon(
               onPressed: _isMonitoring ? _stopMonitoring : _startMonitoring,
               style: ElevatedButton.styleFrom(
-                backgroundColor: _isMonitoring ? AppColors.danger : AppColors.primary,
+                backgroundColor: _isMonitoring ? AppColors.ink : AppColors.primary,
+                foregroundColor: _isMonitoring ? AppColors.surface : AppColors.ink,
+                side: const BorderSide(color: AppColors.line, width: 1.5),
+                elevation: 0,
+                padding: const EdgeInsets.symmetric(vertical: 16),
               ),
-              icon: Icon(_isMonitoring ? Icons.stop_rounded : Icons.play_arrow_rounded),
-              label: Text(_isMonitoring ? 'STOP MONITORING' : 'START MONITORING'),
+              icon: Icon(
+                _isMonitoring ? Icons.stop_rounded : Icons.play_arrow_rounded,
+                size: 20,
+              ),
+              label: Text(
+                _isMonitoring ? 'HALT TELEMETRY STREAM' : 'INITIALIZE TELEMETRY STREAM',
+                style: const TextStyle(
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 1.0,
+                ),
+              ),
             ),
           ),
         ),
         if (_monitorError != null) ...[
           const SizedBox(height: 14),
           AppCard(
-            background: AppColors.warningSoft,
-            borderColor: const Color(0xFFFDE68A),
+            background: AppColors.primary,
+            borderColor: AppColors.line,
+            hasShadow: true,
+            shadowOffset: 2,
             padding: const EdgeInsets.all(14),
             child: Row(
               children: [
-                const Icon(Icons.error_outline, size: 18, color: AppColors.warning),
+                const Icon(Icons.error_outline, size: 20, color: AppColors.ink),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    _monitorError!,
-                    style: const TextStyle(fontSize: 12, color: Color(0xFF92400E), height: 1.4),
+                    'ERR // ${_monitorError!.toUpperCase()}',
+                    style: const TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.ink,
+                      height: 1.4,
+                    ),
                   ),
                 ),
               ],
@@ -488,6 +533,8 @@ class _LiveMonitorScreenState extends State<LiveMonitorScreen> {
         FadeSlideIn(
           index: 3,
           child: AppCard(
+            hasShadow: true,
+            shadowOffset: 3,
             child: Row(
               children: [
                 RiskGauge(score: _riskScore, level: _riskLevel, size: 124),
@@ -497,30 +544,34 @@ class _LiveMonitorScreenState extends State<LiveMonitorScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'ACOUSTIC CLASS',
+                        'CLASSIFIED SIGNATURE',
                         style: TextStyle(
                           fontSize: 10,
                           letterSpacing: 1.2,
-                          fontWeight: FontWeight.w800,
+                          fontWeight: FontWeight.w900,
                           color: AppColors.inkMuted,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         _currentClass.replaceAll('_', ' ').toUpperCase(),
-                        style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w800),
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 0.5,
+                        ),
                       ),
                       if (_rawClass != null && _rawClass != _currentClass) ...[
                         const SizedBox(height: 6),
                         StatusPill(
-                          label: 'RAW: ${_rawClass!.toUpperCase()}',
-                          color: AppColors.warning,
-                          background: AppColors.warningSoft,
+                          label: 'RAW // ${_rawClass!.toUpperCase()}',
+                          color: AppColors.ink,
+                          background: AppColors.surfaceAlt,
                         ),
                       ],
                       const SizedBox(height: 10),
                       StatusPill(
-                        label: _riskLevel.replaceAll('_', ' '),
+                        label: 'LEVEL // ${_riskLevel.replaceAll('_', ' ')}',
                         color: AppColors.forRiskLevel(_riskLevel),
                         background: AppColors.softForRiskLevel(_riskLevel),
                       ),
@@ -532,15 +583,17 @@ class _LiveMonitorScreenState extends State<LiveMonitorScreen> {
           ),
         ),
         const SizedBox(height: 20),
-        const FadeSlideIn(index: 4, child: SectionLabel('Two-pass detection')),
+        const FadeSlideIn(index: 4, child: SectionLabel('02 // TWO-PASS VERIFICATION MATRIX')),
         FadeSlideIn(
           index: 4,
           child: AppCard(
+            hasShadow: true,
+            shadowOffset: 3,
             child: Column(
               children: [
-                _buildConfidenceRow('Pass 1 · primary (2s)', _p1Confidence, AppColors.primary),
+                _buildConfidenceRow('PASS 1 · PRIMARY WINDOW (2S)', _p1Confidence, AppColors.primary),
                 const SizedBox(height: 16),
-                _buildConfidenceRow('Pass 2 · verification (5s)', _p2Confidence, AppColors.accent),
+                _buildConfidenceRow('PASS 2 · VERIFICATION WINDOW (5S)', _p2Confidence, AppColors.ink),
               ],
             ),
           ),
@@ -556,27 +609,44 @@ class _LiveMonitorScreenState extends State<LiveMonitorScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(label, style: const TextStyle(fontSize: 13, color: AppColors.inkMuted)),
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 0.5,
+                color: AppColors.inkMuted,
+              ),
+            ),
             AnimatedCounter(
               value: confidence * 100,
               suffix: '%',
               decimals: 1,
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w900,
+                color: AppColors.ink,
+              ),
             ),
           ],
         ),
         const SizedBox(height: 8),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(8),
+        Container(
+          height: 10,
+          decoration: BoxDecoration(
+            color: AppColors.surfaceAlt,
+            border: Border.all(color: AppColors.line, width: 1),
+          ),
           child: TweenAnimationBuilder<double>(
             tween: Tween(begin: 0, end: confidence.clamp(0.0, 1.0)),
             duration: AppDurations.slow,
             curve: Curves.easeOutCubic,
-            builder: (context, value, _) => LinearProgressIndicator(
-              value: value,
-              minHeight: 8,
-              backgroundColor: AppColors.surfaceAlt,
-              valueColor: AlwaysStoppedAnimation(color),
+            builder: (context, value, _) => FractionallySizedBox(
+              alignment: Alignment.centerLeft,
+              widthFactor: value,
+              child: Container(
+                color: color,
+              ),
             ),
           ),
         ),

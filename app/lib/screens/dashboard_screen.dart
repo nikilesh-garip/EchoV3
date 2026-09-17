@@ -117,42 +117,48 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Row(
       children: [
         Container(
-          width: 46,
-          height: 46,
+          width: 44,
+          height: 44,
           decoration: BoxDecoration(
-            color: AppColors.primarySoft,
-            borderRadius: BorderRadius.circular(14),
+            color: AppColors.primary,
+            border: Border.all(color: AppColors.line, width: 1.5),
+            boxShadow: neoShadow(offset: 2),
           ),
           alignment: Alignment.center,
           child: Text(
             name.isNotEmpty ? name[0].toUpperCase() : 'E',
             style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w800,
-              color: AppColors.primary,
+              fontSize: 18,
+              fontWeight: FontWeight.w900,
+              color: AppColors.ink,
             ),
           ),
         ),
-        const SizedBox(width: 14),
+        const SizedBox(width: 12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'ECHO SHIELD',
+                '00 // SYSTEM_SHIELD',
                 style: TextStyle(
-                  fontSize: 11,
-                  letterSpacing: 1.6,
-                  fontWeight: FontWeight.w800,
+                  fontSize: 10,
+                  letterSpacing: 1.5,
+                  fontWeight: FontWeight.w900,
                   color: AppColors.inkMuted,
                 ),
               ),
               const SizedBox(height: 2),
               Text(
-                name,
+                name.toUpperCase(),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 0.5,
+                  color: AppColors.ink,
+                ),
               ),
             ],
           ),
@@ -164,21 +170,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   padding: EdgeInsets.only(right: 8),
                   child: StatusPill(
                     label: 'DEMO MODEL',
-                    color: AppColors.warning,
-                    background: AppColors.warningSoft,
+                    color: AppColors.ink,
+                    background: AppColors.primary,
                     icon: Icons.science_outlined,
                   ),
                 )
               : const SizedBox.shrink(),
         ),
-        IconButton(
-          icon: const Icon(Icons.settings_outlined),
-          onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => SettingsScreen(
-                sensitivityThreshold: widget.sensitivityThreshold,
-                onSensitivityChanged: widget.onSensitivityChanged,
+        Container(
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            border: Border.all(color: AppColors.line, width: 1.2),
+          ),
+          child: IconButton(
+            icon: const Icon(Icons.settings_outlined, size: 20, color: AppColors.ink),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SettingsScreen(
+                  sensitivityThreshold: widget.sensitivityThreshold,
+                  onSensitivityChanged: widget.onSensitivityChanged,
+                ),
               ),
             ),
           ),
@@ -190,32 +202,34 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget _buildHero() {
     final monitoring = widget.isMonitoring;
     return AppCard(
-      padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
+      hasShadow: true,
+      shadowOffset: 4,
+      padding: const EdgeInsets.all(22),
       child: Column(
         children: [
           PulseRing(
             active: monitoring,
-            color: monitoring ? AppColors.primary : AppColors.inkFaint,
-            size: 158,
+            color: monitoring ? AppColors.primary : AppColors.lineSubtle,
+            size: 154,
             child: Container(
-              width: 84,
-              height: 84,
+              width: 80,
+              height: 80,
               decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: monitoring ? AppColors.primarySoft : AppColors.surfaceAlt,
+                color: monitoring ? AppColors.primary : AppColors.surfaceAlt,
+                border: Border.all(color: AppColors.line, width: 1.5),
               ),
               child: Icon(
                 monitoring ? Icons.hearing : Icons.hearing_disabled,
-                size: 36,
-                color: monitoring ? AppColors.primary : AppColors.inkFaint,
+                size: 34,
+                color: AppColors.ink,
               ),
             ),
           ),
           const SizedBox(height: 16),
           StatusPill(
-            label: monitoring ? 'LISTENING' : 'STANDBY',
-            color: monitoring ? AppColors.success : AppColors.inkMuted,
-            background: monitoring ? AppColors.successSoft : AppColors.surfaceAlt,
+            label: monitoring ? 'TELEMETRY // ACTIVE' : 'TELEMETRY // STANDBY',
+            color: monitoring ? AppColors.ink : AppColors.inkMuted,
+            background: monitoring ? AppColors.primary : AppColors.surfaceAlt,
             icon: monitoring ? Icons.circle : Icons.pause_circle_outline,
           ),
           const SizedBox(height: 12),
@@ -224,13 +238,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ? 'Echo is analysing 2-second windows and verifying anything suspicious over 5 seconds.'
                 : 'Monitoring runs on the Live Monitor tab, where the microphone session lives.',
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 13, color: AppColors.inkMuted, height: 1.5),
+            style: const TextStyle(fontSize: 12, color: AppColors.inkMuted, height: 1.5),
           ),
           const SizedBox(height: 18),
           PressableScale(
             child: ElevatedButton.icon(
               onPressed: widget.onOpenMonitor,
-              icon: Icon(monitoring ? Icons.open_in_full : Icons.play_arrow_rounded),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: AppColors.ink,
+                side: const BorderSide(color: AppColors.line, width: 1.5),
+              ),
+              icon: Icon(
+                monitoring ? Icons.open_in_full : Icons.play_arrow_rounded,
+                size: 18,
+                color: AppColors.ink,
+              ),
               label: Text(monitoring ? 'VIEW LIVE MONITOR' : 'OPEN LIVE MONITOR'),
             ),
           ),
@@ -241,19 +264,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _buildBackendWarning() {
     return AppCard(
-      background: AppColors.warningSoft,
-      borderColor: const Color(0xFFFDE68A),
+      background: AppColors.primary,
+      borderColor: AppColors.line,
+      hasShadow: true,
+      shadowOffset: 3,
       padding: const EdgeInsets.all(16),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(Icons.cloud_off_outlined, size: 18, color: AppColors.warning),
-          const SizedBox(width: 10),
+          const Icon(Icons.cloud_off_outlined, size: 20, color: AppColors.ink),
+          const SizedBox(width: 12),
           Expanded(
             child: Text(
-              'Backend unreachable at ${AppSession.apiBaseUrl}. Detection and alerts will not '
-              'work until it is running.',
-              style: const TextStyle(fontSize: 12, height: 1.5, color: Color(0xFF92400E)),
+              'ERR // BACKEND UNREACHABLE AT ${AppSession.apiBaseUrl}. Telemetry and alert services offline.',
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.2,
+                height: 1.4,
+                color: AppColors.ink,
+              ),
             ),
           ),
         ],
@@ -270,45 +300,59 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final simulated = channels?['simulation_mode'] == true;
 
     return AppCard(
+      hasShadow: true,
+      shadowOffset: 3,
       onTap: widget.onOpenContacts,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(
-                ready ? Icons.verified_user_outlined : Icons.gpp_maybe_outlined,
-                size: 20,
-                color: ready ? AppColors.success : AppColors.warning,
+              Container(
+                width: 28,
+                height: 28,
+                decoration: BoxDecoration(
+                  color: ready ? AppColors.primary : AppColors.surfaceAlt,
+                  border: Border.all(color: AppColors.line, width: 1.2),
+                ),
+                child: Icon(
+                  ready ? Icons.verified_user_outlined : Icons.gpp_maybe_outlined,
+                  size: 16,
+                  color: AppColors.ink,
+                ),
               ),
               const SizedBox(width: 10),
               const Expanded(
                 child: Text(
-                  'If something happens now',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800),
+                  'DISPATCH READY STATE',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 0.5,
+                    color: AppColors.ink,
+                  ),
                 ),
               ),
               StatusPill(
-                label: _loading ? 'CHECKING' : (ready ? 'READY' : 'INCOMPLETE'),
-                color: ready ? AppColors.success : AppColors.warning,
-                background: ready ? AppColors.successSoft : AppColors.warningSoft,
+                label: _loading ? 'SYNCING' : (ready ? 'VERIFIED' : 'PENDING'),
+                color: AppColors.ink,
+                background: ready ? AppColors.primary : AppColors.surfaceAlt,
               ),
             ],
           ),
           const SizedBox(height: 12),
           Text(
             contactCount == 0
-                ? 'No emergency contact is saved yet, so nobody would be called or messaged.'
-                : '$contactCount contact${contactCount == 1 ? '' : 's'} would be called with an '
-                    'automated voice alert and sent the 5-second clip plus your location on Telegram.',
-            style: const TextStyle(fontSize: 13, color: AppColors.inkMuted, height: 1.5),
+                ? 'No emergency contacts registered. Protocol dispatch offline.'
+                : '$contactCount contact${contactCount == 1 ? '' : 's'} linked. Escalation sequence primed for automated voice dispatch, 5s telemetry clip, and Telegram coordinate broadcast.',
+            style: const TextStyle(fontSize: 12, color: AppColors.inkMuted, height: 1.5),
           ),
           if (simulated) ...[
             const SizedBox(height: 10),
             const StatusPill(
-              label: 'SIMULATION MODE',
-              color: AppColors.info,
-              background: AppColors.infoSoft,
+              label: 'PROTOCOL // SIMULATION MODE',
+              color: AppColors.ink,
+              background: AppColors.surfaceAlt,
               icon: Icons.science_outlined,
             ),
           ],
@@ -320,7 +364,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(Icons.chevron_right, size: 16, color: AppColors.inkFaint),
+                        const Text(
+                          '!',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w900,
+                            color: AppColors.vermilion,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
                         Expanded(
                           child: Text(
                             blocker,
@@ -332,16 +384,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ),
           ],
-          const SizedBox(height: 8),
-          Row(
-            children: const [
-              Text(
-                'Manage contacts',
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppColors.primary),
-              ),
-              SizedBox(width: 4),
-              Icon(Icons.arrow_forward, size: 15, color: AppColors.primary),
-            ],
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+            decoration: BoxDecoration(
+              color: AppColors.surfaceAlt,
+              border: Border.all(color: AppColors.lineSubtle, width: 1),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                Text(
+                  'CONFIGURE RECIPIENTS',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 0.5,
+                    color: AppColors.ink,
+                  ),
+                ),
+                Icon(Icons.arrow_forward, size: 14, color: AppColors.ink),
+              ],
+            ),
           ),
         ],
       ),
@@ -350,48 +414,52 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _buildContextCard() {
     return AppCard(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      hasShadow: true,
+      shadowOffset: 3,
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
       child: Column(
         children: [
           SwitchListTile(
+            activeThumbColor: AppColors.primary,
             contentPadding: const EdgeInsets.symmetric(horizontal: 12),
-            title: const Text('Media audio active', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+            title: const Text(
+              'MEDIA SUPPRESSION FILTER',
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, letterSpacing: 0.3),
+            ),
             subtitle: const Text(
-              'Lowers risk so TV and movie sounds do not raise an alarm',
-              style: TextStyle(fontSize: 12, color: AppColors.inkMuted),
+              'Attenuate confidence when entertainment or speech media is active',
+              style: TextStyle(fontSize: 11, color: AppColors.inkMuted),
             ),
             value: widget.mediaPlayback,
             onChanged: widget.onMediaPlaybackChanged,
           ),
-          const Divider(indent: 12, endIndent: 12),
+          const Divider(height: 1, color: AppColors.lineSubtle),
           SwitchListTile(
+            activeThumbColor: AppColors.primary,
             contentPadding: const EdgeInsets.symmetric(horizontal: 12),
             title: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 const Flexible(
                   child: Text(
-                    'Sudden motion (panic)',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                    'HIGH ACCEL SENSOR TRIGGER',
+                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, letterSpacing: 0.3),
                   ),
                 ),
-                // Shown while the accelerometer auto-detector has fired
-                // recently, so the toggle does not read as the only source
-                // of this signal (it never flips the switch itself).
                 if (widget.autoMotionDetected) ...[
                   const SizedBox(width: 8),
                   const StatusPill(
-                    label: 'AUTO-DETECTED',
-                    color: AppColors.info,
-                    background: AppColors.infoSoft,
+                    label: 'AUTO-TRIPPED',
+                    color: AppColors.ink,
+                    background: AppColors.primary,
                     icon: Icons.vibration,
                   ),
                 ],
               ],
             ),
             subtitle: const Text(
-              'Raises risk when running or a sharp movement is reported',
-              style: TextStyle(fontSize: 12, color: AppColors.inkMuted),
+              'Escalates threat weight upon kinetic shock or sudden velocity change',
+              style: TextStyle(fontSize: 11, color: AppColors.inkMuted),
             ),
             value: widget.suddenMotion,
             onChanged: widget.onSuddenMotionChanged,
@@ -407,21 +475,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: Center(
           child: Padding(
             padding: EdgeInsets.all(16),
-            child: CircularProgressIndicator(color: AppColors.primary),
+            child: CircularProgressIndicator(color: AppColors.ink),
           ),
         ),
       );
     }
     if (_recentEvents.isEmpty) {
-      return const AppCard(
+      return AppCard(
         child: Row(
-          children: [
-            Icon(Icons.check_circle_outline, color: AppColors.success, size: 20),
+          children: const [
+            Icon(Icons.check_circle_outline, color: AppColors.ink, size: 20),
             SizedBox(width: 12),
             Expanded(
               child: Text(
-                'No detections recorded yet.',
-                style: TextStyle(fontSize: 13, color: AppColors.inkMuted),
+                'LOGS // ZERO THREAT SIGNATURES RECORDED',
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.5,
+                  color: AppColors.inkMuted,
+                ),
               ),
             ),
           ],
@@ -447,9 +520,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   height: 42,
                   decoration: BoxDecoration(
                     color: AppColors.softForRiskLevel(level),
-                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AppColors.line, width: 1.2),
                   ),
-                  child: Icon(Icons.warning_amber_rounded, size: 20, color: color),
+                  child: Icon(Icons.warning_amber_rounded, size: 20, color: AppColors.ink),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -458,21 +531,40 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     children: [
                       Text(
                         (event['class_name']?.toString() ?? 'unknown').replaceAll('_', ' ').toUpperCase(),
-                        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800),
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 0.3,
+                        ),
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        '${timestamp.day}/${timestamp.month} '
+                        '${timestamp.day.toString().padLeft(2, '0')}/${timestamp.month.toString().padLeft(2, '0')} '
                         '${timestamp.hour.toString().padLeft(2, '0')}:'
-                        '${timestamp.minute.toString().padLeft(2, '0')}',
-                        style: const TextStyle(fontSize: 11, color: AppColors.inkMuted),
+                        '${timestamp.minute.toString().padLeft(2, '0')}:${timestamp.second.toString().padLeft(2, '0')}',
+                        style: const TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.inkMuted,
+                        ),
                       ),
                     ],
                   ),
                 ),
-                AnimatedCounter(
-                  value: (event['risk_score'] as num?)?.toInt() ?? 0,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: color),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: AppColors.surfaceAlt,
+                    border: Border.all(color: AppColors.line, width: 1),
+                  ),
+                  child: AnimatedCounter(
+                    value: (event['risk_score'] as num?)?.toInt() ?? 0,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w900,
+                      color: color,
+                    ),
+                  ),
                 ),
               ],
             ),

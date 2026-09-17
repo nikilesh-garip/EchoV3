@@ -252,7 +252,7 @@ def incident_clip(incident_id: str):
     return FileResponse(path, media_type="audio/wav", filename="echo_{}.wav".format(incident_id))
 
 
-@router.get("/incidents/{incident_id}/twiml")
+@router.api_route("/incidents/{incident_id}/twiml", methods=["GET", "POST"])
 def incident_twiml(incident_id: str):
     """Fetched by the telephony provider when the contact picks up."""
     incident = emergency.get_incident(incident_id, include_attempts=False)

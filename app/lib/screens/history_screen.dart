@@ -50,8 +50,8 @@ class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProvider
       _api.getIncidentHistory(userId),
     ]);
     if (!mounted) return;
-    final events = results[0] as List<Map<String, dynamic>>?;
-    final incidents = results[1] as List<Map<String, dynamic>>?;
+    final events = results[0];
+    final incidents = results[1];
     setState(() {
       _loading = false;
       if (events == null && incidents == null) {
@@ -66,16 +66,33 @@ class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProvider
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Clear detection history?'),
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadii.control),
+          side: const BorderSide(color: AppColors.line, width: 1.5),
+        ),
+        title: const Text(
+          'PURGE DETECTION LOGS?',
+          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w900, letterSpacing: 0.5),
+        ),
         content: const Text(
-          'This deletes the logged detections for this account. Escalation records '
-          'are kept — what was sent to other people is not erasable from here.',
+          'This purges recorded acoustic telemetry signatures from local cache. Outbound dispatch records and Telegram audit logs are retained permanently.',
+          style: TextStyle(fontSize: 12, color: AppColors.inkMuted, height: 1.5),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
           TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('CANCEL', style: TextStyle(fontWeight: FontWeight.w800, color: AppColors.ink)),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.vermilion,
+              foregroundColor: AppColors.surface,
+              side: const BorderSide(color: AppColors.line, width: 1.2),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadii.control)),
+            ),
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Clear', style: TextStyle(color: AppColors.danger)),
+            child: const Text('PURGE RECORDS', style: TextStyle(fontWeight: FontWeight.w900, letterSpacing: 0.5)),
           ),
         ],
       ),
@@ -88,53 +105,102 @@ class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
           child: Row(
             children: [
-              const Expanded(
-                child: Text('History', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800)),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Text(
+                      '07 // INCIDENT LOGS',
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 1.5,
+                        color: AppColors.inkMuted,
+                      ),
+                    ),
+                    SizedBox(height: 2),
+                    Text(
+                      'AUDIT TRAIL',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 0.5,
+                        color: AppColors.ink,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              IconButton(icon: const Icon(Icons.refresh), onPressed: _load),
-              IconButton(
-                icon: const Icon(Icons.delete_outline, color: AppColors.danger),
-                onPressed: _clearEvents,
+              Container(
+                decoration: BoxDecoration(
+                  color: AppColors.surface,
+                  border: Border.all(color: AppColors.line, width: 1.2),
+                ),
+                child: IconButton(
+                  icon: const Icon(Icons.refresh, size: 18, color: AppColors.ink),
+                  onPressed: _load,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Container(
+                decoration: BoxDecoration(
+                  color: AppColors.surface,
+                  border: Border.all(color: AppColors.line, width: 1.2),
+                ),
+                child: IconButton(
+                  icon: const Icon(Icons.delete_outline, color: AppColors.ink, size: 18),
+                  onPressed: _clearEvents,
+                ),
               ),
             ],
           ),
         ),
-        TabBar(
-          controller: _tabs,
-          labelColor: AppColors.primary,
-          unselectedLabelColor: AppColors.inkMuted,
-          indicatorColor: AppColors.primary,
-          indicatorSize: TabBarIndicatorSize.label,
-          labelStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
-          tabs: [
-            Tab(text: 'Detections (${_events.length})'),
-            Tab(text: 'Escalations (${_incidents.length})'),
-          ],
+        const SizedBox(height: 12),
+        Container(
+          decoration: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(color: AppColors.line, width: 1.5),
+            ),
+          ),
+          child: TabBar(
+            controller: _tabs,
+            labelColor: AppColors.ink,
+            unselectedLabelColor: AppColors.inkMuted,
+            indicatorColor: AppColors.primary,
+            indicatorWeight: 3,
+            indicatorSize: TabBarIndicatorSize.tab,
+            labelStyle: const TextStyle(fontSize: 11, fontWeight: FontWeight.w900, letterSpacing: 0.5),
+            tabs: [
+              Tab(text: 'DETECTIONS [ ${_events.length} ]'),
+              Tab(text: 'DISPATCHES [ ${_incidents.length} ]'),
+            ],
+          ),
         ),
         if (_error != null)
           Padding(
             padding: const EdgeInsets.all(20),
-            child: Text(_error!, style: const TextStyle(color: AppColors.danger, fontSize: 13)),
+            child: Text(_error!, style: const TextStyle(color: AppColors.vermilion, fontSize: 12, fontWeight: FontWeight.w700)),
           ),
         Expanded(
           child: _loading
-              ? const Center(child: CircularProgressIndicator(color: AppColors.primary))
+              ? const Center(child: CircularProgressIndicator(color: AppColors.ink))
               : TabBarView(
                   controller: _tabs,
                   children: [
                     RefreshIndicator(
                       onRefresh: _load,
-                      color: AppColors.primary,
+                      color: AppColors.ink,
                       child: _buildEvents(),
                     ),
                     RefreshIndicator(
                       onRefresh: _load,
-                      color: AppColors.primary,
+                      color: AppColors.ink,
                       child: _buildIncidents(),
                     ),
                   ],
@@ -145,7 +211,7 @@ class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProvider
   }
 
   Widget _buildEvents() {
-    if (_events.isEmpty) return _empty('No detections logged yet.');
+    if (_events.isEmpty) return _empty('ARCHIVE EMPTY // ZERO DETECTIONS LOGGED');
     return ListView.builder(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
       itemCount: _events.length,
@@ -158,17 +224,19 @@ class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProvider
           child: Padding(
             padding: const EdgeInsets.only(bottom: 10),
             child: AppCard(
+              hasShadow: true,
+              shadowOffset: 2,
               padding: const EdgeInsets.all(14),
               child: Row(
                 children: [
                   Container(
-                    width: 42,
-                    height: 42,
+                    width: 40,
+                    height: 40,
                     decoration: BoxDecoration(
                       color: AppColors.softForRiskLevel(level),
-                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: AppColors.line, width: 1.2),
                     ),
-                    child: Icon(Icons.graphic_eq, size: 19, color: color),
+                    child: Icon(Icons.graphic_eq, size: 18, color: AppColors.ink),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -177,21 +245,31 @@ class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProvider
                       children: [
                         Text(
                           (event['class_name']?.toString() ?? '').replaceAll('_', ' ').toUpperCase(),
-                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800),
+                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w900, letterSpacing: 0.3),
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          '${_formatTime(event['timestamp'])} · '
-                          'P1 ${_pct(event['primary_conf'])} · P2 ${_pct(event['verification_conf'])}',
-                          style: const TextStyle(fontSize: 11, color: AppColors.inkMuted),
+                          '${_formatTime(event['timestamp'])} // '
+                          'P1: ${_pct(event['primary_conf'])} · P2: ${_pct(event['verification_conf'])}',
+                          style: const TextStyle(fontSize: 10, color: AppColors.inkMuted, fontWeight: FontWeight.w600),
                         ),
                       ],
                     ),
                   ),
-                  StatusPill(
-                    label: '${event['risk_score'] ?? 0}',
-                    color: color,
-                    background: AppColors.softForRiskLevel(level),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: AppColors.surfaceAlt,
+                      border: Border.all(color: AppColors.line, width: 1),
+                    ),
+                    child: Text(
+                      'SCORE ${event['risk_score'] ?? 0}',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w900,
+                        color: color,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -204,7 +282,7 @@ class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProvider
 
   Widget _buildIncidents() {
     if (_incidents.isEmpty) {
-      return _empty('No contact escalations yet. Nobody has been called or messaged.');
+      return _empty('DISPATCH ARCHIVE EMPTY // ZERO OUTBOUND ALARMS');
     }
     return ListView.builder(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
@@ -216,9 +294,9 @@ class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProvider
           incident['attempts'] as Iterable? ?? const [],
         );
         final color = switch (state) {
-          'DISPATCHED' => AppColors.danger,
-          'CANCELLED' => AppColors.success,
-          'PENDING' => AppColors.warning,
+          'DISPATCHED' => AppColors.vermilion,
+          'CANCELLED' => AppColors.ink,
+          'PENDING' => AppColors.primary,
           _ => AppColors.inkMuted,
         };
 
@@ -227,6 +305,8 @@ class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProvider
           child: Padding(
             padding: const EdgeInsets.only(bottom: 12),
             child: AppCard(
+              hasShadow: true,
+              shadowOffset: 3,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -235,7 +315,7 @@ class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProvider
                       Expanded(
                         child: Text(
                           (incident['class_name']?.toString() ?? '').replaceAll('_', ' ').toUpperCase(),
-                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
+                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w900, letterSpacing: 0.3),
                         ),
                       ),
                       if (incident['profile'] == 'demo')
@@ -243,55 +323,59 @@ class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProvider
                           padding: EdgeInsets.only(right: 8),
                           child: StatusPill(
                             label: 'DEMO',
-                            color: AppColors.warning,
-                            background: AppColors.warningSoft,
+                            color: AppColors.ink,
+                            background: AppColors.primary,
                           ),
                         ),
                       StatusPill(
                         label: state,
                         color: color,
-                        background: color.withOpacity(0.12),
+                        background: AppColors.surfaceAlt,
                       ),
                     ],
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    '${_formatTime(incident['created_at'])} · risk ${incident['risk_score'] ?? 0}'
-                    '${incident['raw_class'] != null && incident['raw_class'] != incident['class_name'] ? ' · raw ${incident['raw_class']}' : ''}',
-                    style: const TextStyle(fontSize: 11, color: AppColors.inkMuted),
+                    '${_formatTime(incident['created_at'])} · THREAT ${incident['risk_score'] ?? 0}/100'
+                    '${incident['raw_class'] != null && incident['raw_class'] != incident['class_name'] ? ' · RAW ${incident['raw_class']}' : ''}',
+                    style: const TextStyle(fontSize: 11, color: AppColors.inkMuted, fontWeight: FontWeight.w600),
                   ),
                   if (incident['note'] != null) ...[
                     const SizedBox(height: 6),
                     Text(
-                      incident['note'].toString(),
-                      style: const TextStyle(fontSize: 11, color: AppColors.inkMuted, height: 1.4),
+                      incident['note'].toString().toUpperCase(),
+                      style: const TextStyle(fontSize: 10, color: AppColors.inkMuted, height: 1.4, fontWeight: FontWeight.w700),
                     ),
                   ],
                   if (attempts.isNotEmpty) ...[
                     const SizedBox(height: 10),
-                    const Divider(height: 1),
+                    const Divider(height: 1, color: AppColors.lineSubtle),
                     const SizedBox(height: 10),
                     ...attempts.map(
                       (attempt) => Padding(
                         padding: const EdgeInsets.only(bottom: 6),
                         child: Row(
                           children: [
-                            Icon(
-                              attempt['channel'] == 'telegram'
-                                  ? Icons.send_outlined
-                                  : Icons.phone_in_talk_outlined,
-                              size: 15,
-                              color: attempt['status'] == 'sent'
-                                  ? AppColors.success
-                                  : attempt['status'] == 'simulated'
-                                      ? AppColors.info
-                                      : AppColors.danger,
+                            Container(
+                              width: 22,
+                              height: 22,
+                              decoration: BoxDecoration(
+                                color: AppColors.surfaceAlt,
+                                border: Border.all(color: AppColors.lineSubtle, width: 1),
+                              ),
+                              child: Icon(
+                                attempt['channel'] == 'telegram'
+                                    ? Icons.send_outlined
+                                    : Icons.phone_in_talk_outlined,
+                                size: 12,
+                                color: AppColors.ink,
+                              ),
                             ),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                '${attempt['contact_name'] ?? 'Contact'} · ${attempt['status']}',
-                                style: const TextStyle(fontSize: 11, color: AppColors.inkMuted),
+                                '${(attempt['contact_name'] ?? 'Contact').toString().toUpperCase()} // ${(attempt['status'] ?? '').toString().toUpperCase()}',
+                                style: const TextStyle(fontSize: 11, color: AppColors.ink, fontWeight: FontWeight.w700),
                               ),
                             ),
                           ],
@@ -313,12 +397,12 @@ class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProvider
       padding: const EdgeInsets.all(20),
       children: [
         const SizedBox(height: 40),
-        Icon(Icons.inbox_outlined, size: 42, color: AppColors.inkFaint),
+        Icon(Icons.inbox_outlined, size: 40, color: AppColors.lineSubtle),
         const SizedBox(height: 12),
         Text(
           message,
           textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 13, color: AppColors.inkMuted, height: 1.5),
+          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, letterSpacing: 0.5, color: AppColors.inkMuted, height: 1.5),
         ),
       ],
     );
@@ -330,7 +414,7 @@ class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProvider
     final time = DateTime.fromMillisecondsSinceEpoch(
       ((((epochSeconds as num?) ?? 0)) * 1000).round(),
     );
-    return '${time.day}/${time.month} '
+    return '${time.day.toString().padLeft(2, '0')}/${time.month.toString().padLeft(2, '0')} '
         '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
   }
 }

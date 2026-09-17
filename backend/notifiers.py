@@ -319,7 +319,6 @@ class VoiceCaller:
                     "To": to_number,
                     "From": self.from_number,
                     "Url": self.twiml_url(incident_id),
-                    "Method": "GET",
                 },
                 timeout=self.timeout,
             )
